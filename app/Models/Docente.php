@@ -9,6 +9,13 @@ class Docente extends Model
 {
     use HasFactory;
 
+    protected $table = 'docentes';
+
+    protected $fillable = [
+        'nombre',
+        'apellido',
+        'correo',
+    ];
     public function secciones()
     {
         return $this->hasMany(Secciones::class);

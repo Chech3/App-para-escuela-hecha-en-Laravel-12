@@ -9,6 +9,7 @@ class Secciones extends Model
 {
     use HasFactory;
 
+    protected $table = 'secciones';
 
     protected $fillable = [
         'nombre',

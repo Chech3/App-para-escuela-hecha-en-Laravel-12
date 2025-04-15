@@ -4,7 +4,7 @@ import { useState } from "react";
 import Modal from "@/Components/Modal";
 import { User } from "@/types/inertia";
 
-interface Estudiante {
+export interface Estudiante {
     id: number;
     nombre: string;
     apellido: string;
@@ -16,25 +16,29 @@ interface Estudiante {
     seccion: { id: number; nombre: string };
 }
 
-interface Grado {
+export interface Grado {
     id: number;
     nombre: string;
 }
+
 
 interface Seccion {
     id: number;
     nombre: string;
 }
 
-interface PageProps {
+
+
+export interface PageProps {
     auth: { user: User | null };
     estudiantes: Estudiante[];
     grados: Grado[];
     secciones: Seccion[];
+    [key: string]: any; // Esto permite cualquier clave de tipo string para coincidir con la firma de índice
 }
 
 export default function Index() {
-    const { estudiantes, grados, secciones } = usePage<PageProps>().props;
+    const { estudiantes, grados, secciones } = usePage<any>().props;
 
     const [showModal, setShowModal] = useState(false);
     const [form, setForm] = useState({
@@ -100,7 +104,7 @@ export default function Index() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {estudiantes.map((e) => (
+                                    {estudiantes.map((e: Estudiante) => (
                                         <tr key={e.id}>
                                             <td className="px-4 py-2">{e.nombre}</td>
                                             <td className="px-4 py-2">{e.apellido}</td>
@@ -163,7 +167,7 @@ export default function Index() {
                                 required
                             >
                                 <option value="">Seleccione grado</option>
-                                {grados?.map((grado) => (
+                                {grados?.map((grado: Grado) => (
                                     <option key={grado.id} value={grado.id}>
                                         {grado.nombre}
                                     </option>
@@ -176,7 +180,7 @@ export default function Index() {
                                 required
                             >
                                 <option value="">Seleccione sección</option>
-                                {secciones?.map((seccion) => (
+                                {secciones?.map((seccion: Seccion) => (
                                     <option key={seccion.id} value={seccion.id}>
                                         {seccion.nombre}
                                     </option>

@@ -4,9 +4,12 @@ use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\GradoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeccionesController;
+use App\Models\Docente;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+// Docente::create(['nombre' => 'Docente 1', 'apellido' => 'docente apellido', 'correo' => 'corre@mail.com']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
