@@ -5,25 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Estudiante extends Model
+class Secciones extends Model
 {
     use HasFactory;
 
+
     protected $fillable = [
         'nombre',
-        'apellido',
-        'fecha_nacimiento',
-        'genero',
         'grado_id',
-        'seccion_id',
+        'docente_id',
     ];
     public function grado()
     {
         return $this->belongsTo(Grado::class);
     }
 
-    public function seccion()
+    public function docente()
     {
-        return $this->belongsTo(Secciones::class);
+        return $this->belongsTo(Docente::class);
+    }
+
+    public function estudiantes()
+    {
+        return $this->hasMany(Estudiante::class);
     }
 }

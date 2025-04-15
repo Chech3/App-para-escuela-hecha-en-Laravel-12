@@ -33,6 +33,26 @@ export default function Authenticated({
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    href={route('estudiantes.index')}
+                                    active={route().current('estudiantes.*')}
+                                >
+                                    Estudiantes
+                                </NavLink>
+
+                                <NavLink
+                                    href={route('grados.index')}
+                                    active={route().current('grados.*')}
+                                >
+                                    Grados
+                                </NavLink>
+
+                                <NavLink
+                                    href={route('secciones.index')}
+                                    active={route().current('secciones.*')}
+                                >
+                                    Secciones
+                                </NavLink>
                             </div>
                         </div>
 

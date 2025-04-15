@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Docente;
+use App\Models\Grado;
+use App\Models\Secciones;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class SeccionesController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        return Inertia::render('Secciones/Index', [
+            'secciones' => Secciones::with(['grado', 'docente'])->get(),
+            'grados' => Grado::all(),
+            'docentes' => Docente::all(),
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:10',
+            'grado_id' => 'required|exists:grados,id',
+            'docente_id' => 'nullable|exists:docentes,id',
+        ]);
+    
+        Secciones::create($validated);
+    
+        return redirect()->back()->with('success', 'Sección creada correctamente.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Secciones $secciones)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Secciones $secciones)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Secciones $secciones)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Secciones $secciones)
+    {
+        //
+    }
+}

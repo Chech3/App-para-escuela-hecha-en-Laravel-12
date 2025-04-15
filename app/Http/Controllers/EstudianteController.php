@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Docente;
 use App\Models\Estudiante;
+use App\Models\Grado;
+use App\Models\Secciones;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class EstudianteController extends Controller
 {
@@ -12,7 +16,13 @@ class EstudianteController extends Controller
      */
     public function index()
     {
-        return view('estudiantes.index' );
+        $estudiantes = Estudiante::with('grado', 'seccion')->get();
+        return Inertia::render('Estudiantes/Index', [
+            'estudiantes' => $estudiantes,
+            'grados' => Grado::all(),
+            'docentes' => Docente::all(),
+            'secciones' => Secciones::all(),
+        ]);
     }
 
     /**
@@ -20,7 +30,10 @@ class EstudianteController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Estudiantes/Create', [
+            'grados' => Grado::all(),
+            'secciones' => Secciones::all()
+        ]);
     }
 
     /**
@@ -28,7 +41,18 @@ class EstudianteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required',
+            'apellido' => 'required',
+            'fecha_nacimiento' => 'required|date',
+            'genero' => 'required',
+            'grado_id' => 'required|exists:grados,id',
+            'seccion_id' => 'required|exists:secciones,id',
+        ]);
+
+        Estudiante::create($request->all());
+
+        return redirect()->route('estudiantes.index')->with('success', 'Estudiante creado correctamente');
     }
 
     /**
