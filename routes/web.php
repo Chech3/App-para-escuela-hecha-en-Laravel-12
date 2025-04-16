@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\GradoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeccionesController;
-use App\Models\Docente;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('estudiantes', EstudianteController::class)->names('estudiantes');
     Route::resource('grados', GradoController::class)->names(['grados']);
     Route::resource('secciones', SeccionesController::class)->names(['secciones']);
+    Route::resource('docente', DocenteController::class)->names(['profesores']);
     // Route::post('estudiantes',  [EstudianteController::class, 'store'])->name('estudiantes');
 });
 

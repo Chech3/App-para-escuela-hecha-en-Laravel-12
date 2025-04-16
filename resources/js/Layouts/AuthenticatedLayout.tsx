@@ -15,31 +15,24 @@ export default function Authenticated({
         useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 justify-between">
-                        <div className="flex">
+        <section style={{backgroundImage: `url("/escuela.jpg")` }} className="min-h-screen bg-cover bg-no-repeat bg-[center_-100%]">
+            <nav  className="border-b border-gray-100 bg-gray-300">
+                <div  className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div  className="flex h-16 justify-between">
+                        <div  className="flex ">
                             <div className="flex shrink-0 items-center">
                                 <Link href="/">
                                     <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
                                 </Link>
                             </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                            <div  className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
                                     href={route('dashboard')}
                                     active={route().current('dashboard')}
                                 >
-                                    Dashboard
+                                    Inicio
                                 </NavLink>
-                                <NavLink
-                                    href={route('estudiantes.index')}
-                                    active={route().current('estudiantes.*')}
-                                >
-                                    Estudiantes
-                                </NavLink>
-
                                 <NavLink
                                     href={route('grados.index')}
                                     active={route().current('grados.*')}
@@ -48,11 +41,25 @@ export default function Authenticated({
                                 </NavLink>
 
                                 <NavLink
+                                    href={route('docente.index')}
+                                    active={route().current('docente.*')}
+                                >
+                                    Docentes
+                                </NavLink>
+                                <NavLink
                                     href={route('secciones.index')}
                                     active={route().current('secciones.*')}
                                 >
                                     Secciones
                                 </NavLink>
+                                <NavLink
+                                    href={route('estudiantes.index')}
+                                    active={route().current('estudiantes.*')}
+                                >
+                                    Estudiantes
+                                </NavLink>
+
+
                             </div>
                         </div>
 
@@ -155,7 +162,7 @@ export default function Authenticated({
                             href={route('dashboard')}
                             active={route().current('dashboard')}
                         >
-                            Dashboard
+                            Inicio
                         </ResponsiveNavLink>
                     </div>
 
@@ -186,7 +193,7 @@ export default function Authenticated({
             </nav>
 
             {header && (
-                <header className="bg-white shadow">
+                <header className="bg-gray-300 shadow">
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>
@@ -194,6 +201,6 @@ export default function Authenticated({
             )}
 
             <main>{children}</main>
-        </div>
+        </section>
     );
 }

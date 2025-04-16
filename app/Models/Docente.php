@@ -15,6 +15,7 @@ class Docente extends Model
         'nombre',
         'apellido',
         'correo',
+        'especialidad',
     ];
     public function secciones()
     {

@@ -4,31 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Docente;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DocenteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+   
     public function index()
     {
-        //
+        $docentes = Docente::all();
+        return Inertia::render('Docentes/Index', [
+            'docentes' => $docentes,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+            'correo' => 'required|email|max:255|unique:docentes,correo',
+        ]);
+
+        Docente::create($request->all());
+
+        return redirect()->route('docente.index')->with('success', 'Docente creado con éxito.');
     }
 
     /**
