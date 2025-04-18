@@ -60,6 +60,8 @@ class GradoController extends Controller
      */
     public function destroy(Grado $grado)
     {
-        //
+        $grado->delete();
+
+        return redirect()->back()->with('success', 'Grado eliminado exitosamente.');
     }
 }

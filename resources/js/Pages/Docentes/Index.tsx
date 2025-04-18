@@ -14,14 +14,26 @@ export interface Docente {
 
 export default function Index() {
     const { docentes } = usePage<any>().props;
-
+    const [showModalE, setShowModalE] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [idM, setIdM] = useState<number | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [form, setForm] = useState({
         nombre: "",
         apellido: "",
         especialidad: "",
         correo: "",
     });
+
+    const eliminar = (id: number) => {
+        router.delete(route(`docente.destroy`, { id })),
+            {
+                onSuccess: () => {
+                    setShowModalE(false);
+                    setIdM(null);
+                },
+            };
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -80,6 +92,9 @@ export default function Index() {
                                         <th className="px-4 py-2 text-left">
                                             Correo
                                         </th>
+                                        <th className="px-4 py-2 text-left">
+                                            acciones
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
@@ -96,6 +111,17 @@ export default function Index() {
                                             </td>
                                             <td className="px-4 py-2">
                                                 {e.correo}
+                                            </td>
+                                            <td className="px-4 py-2 flex gap-2">
+                                                <button
+                                                    onClick={() => {
+                                                        setShowModalE(true),
+                                                            setIdM(e.id);
+                                                    }}
+                                                    className="bg-red-500 rounded text-white px-4 py-2 hover:bg-red-600"
+                                                >
+                                                    Eliminar
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
@@ -179,6 +205,51 @@ export default function Index() {
                             </button>
                         </div>
                     </form>
+                </div>
+            </Modal>
+
+            <Modal
+                show={showModalE}
+                onClose={() => setShowModalE(false)}
+                maxWidth="lg"
+            >
+                <div className="p-6">
+                    <p>
+                        Estas seguro que deseas eliminar este docente? Esta
+                        acción no se puede deshacer.
+                    </p>
+                    <div className="flex justify-end gap-2 pt-4">
+                        <button
+                            type="button"
+                            onClick={() => setShowModalE(false)}
+                            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                                        onClick={() => {
+                                            if (!isSubmitting) {
+                                                setIsSubmitting(true);
+                                                eliminar(idM!);
+                                                setTimeout(() => {
+                                                    setShowModalE(false);
+                                                    setIsSubmitting(false);
+                                                }, 900);
+                                            }
+                                        }}
+                                        type="submit"
+                                        className={`px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 ${
+                                            isSubmitting
+                                                ? "opacity-75 cursor-not-allowed"
+                                                : ""
+                                        }`}
+                                        disabled={isSubmitting}
+                                    >
+                                        {isSubmitting
+                                            ? "Eliminando..."
+                                            : "Eliminar"}
+                                    </button>
+                    </div>
                 </div>
             </Modal>
         </AuthenticatedLayout>

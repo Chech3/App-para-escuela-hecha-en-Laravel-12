@@ -60,6 +60,8 @@ class DocenteController extends Controller
      */
     public function destroy(Docente $docente)
     {
-        //
+        $docente->delete();
+
+        return redirect()->route('docente.index')->with('success', 'Docente eliminado con éxito.');
     }
 }
