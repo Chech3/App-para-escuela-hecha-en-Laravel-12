@@ -54,8 +54,8 @@ export default function Index({ secciones, grados, docentes }: Props) {
         <AuthenticatedLayout header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Secciones</h2>}>
             <Head title="Secciones" />
 
-            <div className="max-w-4xl mx-auto py-10">
-                <form onSubmit={handleSubmit} className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="max-w-4xl mx-auto py-10 bg-white rounded shadow-md px-6 mt-12">
+                {/* <form onSubmit={handleSubmit} className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <input
                         type="text"
                         name="nombre"
@@ -100,7 +100,7 @@ export default function Index({ secciones, grados, docentes }: Props) {
                             Guardar sección
                         </button>
                     </div>
-                </form>
+                </form> */}
 
                 <div className="bg-white shadow rounded overflow-x-auto">
                     <table className="w-full text-left">

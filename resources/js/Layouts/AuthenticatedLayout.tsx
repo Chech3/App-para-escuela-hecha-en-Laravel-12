@@ -41,6 +41,13 @@ export default function Authenticated({
                                 </NavLink>
 
                                 <NavLink
+                                    href={route('horarios.index')}
+                                    active={route().current('horarios.*')}
+                                >
+                                    Horarios
+                                </NavLink>
+
+                                <NavLink
                                     href={route('docente.index')}
                                     active={route().current('docente.*')}
                                 >
@@ -58,6 +65,8 @@ export default function Authenticated({
                                 >
                                     Estudiantes
                                 </NavLink>
+
+                              
 
 
                             </div>

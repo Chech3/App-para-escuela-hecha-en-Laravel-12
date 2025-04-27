@@ -3,6 +3,7 @@
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\GradoController;
+use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeccionesController;
 use Illuminate\Foundation\Application;
@@ -33,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('grados', GradoController::class)->names(['grados']);
     Route::resource('secciones', SeccionesController::class)->names(['secciones']);
     Route::resource('docente', DocenteController::class)->names(['profesores']);
+    Route::resource('horarios', HorarioController::class)->names(['horarios']);
     // Route::post('estudiantes',  [EstudianteController::class, 'store'])->name('estudiantes');
 });
 

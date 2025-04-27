@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Docente;
+use App\Models\Horario;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -11,9 +12,13 @@ class DocenteController extends Controller
    
     public function index()
     {
-        $docentes = Docente::all();
+        $docentes = Docente::with('horario')->get();
+
+        $horarios = Horario::all(); 
+        // $docentes = Docente::all();
         return Inertia::render('Docentes/Index', [
             'docentes' => $docentes,
+            'horarios' => $horarios, 
         ]);
     }
 

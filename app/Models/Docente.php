@@ -16,9 +16,15 @@ class Docente extends Model
         'apellido',
         'correo',
         'especialidad',
+        'horario_id'
     ];
     public function secciones()
     {
         return $this->hasMany(Secciones::class);
+    }
+
+    public function horario()
+    {
+        return $this->belongsTo(Horario::class);
     }
 }

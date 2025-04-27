@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('docentes', function (Blueprint $table) {
+        Schema::create('horarios', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('apellido');
-            $table->string('especialidad')->nullable();
-            $table->string('correo')->unique();
+            // $table->foreignId('docente_id')->constrained('docentes')->onDelete('cascade');
+            $table->string('dia');
+            $table->time('hora_inicio');
+            $table->time('hora_fin');
             $table->timestamps();
-
-            $table->foreignId('horario_id')->nullable()->constrained('horarios');
         });
     }
 
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('docentes');
+        Schema::dropIfExists('horarios');
     }
 };

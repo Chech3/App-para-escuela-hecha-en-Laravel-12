@@ -3,17 +3,18 @@ import { Head, usePage, router } from "@inertiajs/react";
 import { useState } from "react";
 import Modal from "@/Components/Modal";
 import TextInput from "@/Components/TextInput";
-
+import { convertirHoraAMPM } from "../../utils/ConvertirHora";
 export interface Docente {
     id: number;
     nombre: string;
     apellido: string;
     especialidad: string;
     correo: string;
+    horario: any;
 }
 
 export default function Index() {
-    const { docentes } = usePage<any>().props;
+    const { docentes, horarios } = usePage<any>().props;
     const [showModalE, setShowModalE] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
@@ -23,6 +24,7 @@ export default function Index() {
         apellido: "",
         especialidad: "",
         correo: "",
+        horario_id: "",
     });
 
     const eliminar = (id: number) => {
@@ -46,6 +48,7 @@ export default function Index() {
                     apellido: "",
                     especialidad: "",
                     correo: "",
+                    horario_id: "",
                 });
             },
         });
@@ -90,6 +93,9 @@ export default function Index() {
                                             Especialidad
                                         </th>
                                         <th className="px-4 py-2 text-left">
+                                            Horario
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
                                             Correo
                                         </th>
                                         <th className="px-4 py-2 text-left">
@@ -108,6 +114,17 @@ export default function Index() {
                                             </td>
                                             <td className="px-4 py-2">
                                                 {e.especialidad}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {e.horario
+                                                    ? convertirHoraAMPM(
+                                                          e.horario.hora_inicio
+                                                      ) +
+                                                      " - " +
+                                                      convertirHoraAMPM(
+                                                          e.horario.hora_fin
+                                                      )
+                                                    : "Sin horario"}
                                             </td>
                                             <td className="px-4 py-2">
                                                 {e.correo}
@@ -187,6 +204,27 @@ export default function Index() {
                                 }
                                 required
                             />
+
+                            <select
+                                value={form.horario_id}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        horario_id: e.target.value,
+                                    })
+                                }
+                                required
+                                className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            >
+                                <option value="">Selecciona un horario</option>
+                                {horarios.map((horario: any) => (
+                                    <option key={horario.id} value={horario.id}>
+                                        {horario.nombre} (
+                                        {convertirHoraAMPM(horario.hora_inicio)}
+                                        - {convertirHoraAMPM(horario.hora_fin)})
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="flex justify-end gap-2 pt-4">
@@ -227,28 +265,26 @@ export default function Index() {
                             Cancelar
                         </button>
                         <button
-                                        onClick={() => {
-                                            if (!isSubmitting) {
-                                                setIsSubmitting(true);
-                                                eliminar(idM!);
-                                                setTimeout(() => {
-                                                    setShowModalE(false);
-                                                    setIsSubmitting(false);
-                                                }, 900);
-                                            }
-                                        }}
-                                        type="submit"
-                                        className={`px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 ${
-                                            isSubmitting
-                                                ? "opacity-75 cursor-not-allowed"
-                                                : ""
-                                        }`}
-                                        disabled={isSubmitting}
-                                    >
-                                        {isSubmitting
-                                            ? "Eliminando..."
-                                            : "Eliminar"}
-                                    </button>
+                            onClick={() => {
+                                if (!isSubmitting) {
+                                    setIsSubmitting(true);
+                                    eliminar(idM!);
+                                    setTimeout(() => {
+                                        setShowModalE(false);
+                                        setIsSubmitting(false);
+                                    }, 900);
+                                }
+                            }}
+                            type="submit"
+                            className={`px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 ${
+                                isSubmitting
+                                    ? "opacity-75 cursor-not-allowed"
+                                    : ""
+                            }`}
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? "Eliminando..." : "Eliminar"}
+                        </button>
                     </div>
                 </div>
             </Modal>
