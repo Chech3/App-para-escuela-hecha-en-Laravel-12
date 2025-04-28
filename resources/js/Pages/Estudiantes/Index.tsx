@@ -34,7 +34,7 @@ export interface PageProps {
     estudiantes: Estudiante[];
     grados: Grado[];
     secciones: Seccion[];
-    [key: string]: any; // Esto permite cualquier clave de tipo string para coincidir con la firma de índice
+    [key: string]: any; 
 }
 
 export default function Index() {

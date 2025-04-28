@@ -14,19 +14,17 @@ class GradoController extends Controller
     public function index()
     {
         $grados = Grado::all();
-
+        $fibonacci = $this->generateFibonacciCode(10);
         return Inertia::render('Grados/Index', [
             'grados' => $grados,
+            'fibonacci' => $fibonacci,
         ]);
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-        ]);
-
-        Grado::create($validated);
+        $data = $request->all();
+        Grado::create($data);
 
         return redirect()->back()->with('success', 'Grado creado exitosamente.');
     }
@@ -63,5 +61,25 @@ class GradoController extends Controller
         $grado->delete();
 
         return redirect()->back()->with('success', 'Grado eliminado exitosamente.');
+    }
+
+    private function generateFibonacciCode($n)
+    {
+        $sequence = [0, 1];
+
+        for ($i = 2; $i < $n; $i++) {
+            $sequence[] = $sequence[$i - 1] + $sequence[$i - 2];
+        }
+
+        // Mezclamos los números
+        shuffle($sequence);
+
+        // Tomamos los primeros 5 números (puedes cambiar esto)
+        $selected = array_slice($sequence, 0, 5);
+
+        // Los unimos como un string (puedes agregar separadores si quieres)
+        $code = implode('', $selected);
+
+        return $code;
     }
 }

@@ -23,6 +23,12 @@ export default function Dashboard() {
             href: '/estudiantes',
             image: '/student.svg',
         },
+
+        {
+            title: 'Horarios',
+            href: '/horarios',
+            image: '/horario.png',
+        },
     ];
 
     return (
@@ -37,12 +43,12 @@ export default function Dashboard() {
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {cards.map((card, index) => (
                             <Link
                                 key={index}
                                 href={card.href}
-                                className="rounded-2xl border border-gray-200 bg-gray-300 p-6 shadow-md transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
+                                className="rounded-2xl border border-gray-100 bg-gray-200 p-6 shadow-md transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
                             >
                                 <div className="flex flex-col items-center text-center">
                                     <img

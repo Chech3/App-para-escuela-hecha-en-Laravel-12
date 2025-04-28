@@ -10,7 +10,7 @@ class Grado extends Model
     use HasFactory;
     protected $table = 'grados';
     protected $fillable = [
-        'nombre',
+        'nombre', "codigo",
     ];
 
     public function estudiantes()

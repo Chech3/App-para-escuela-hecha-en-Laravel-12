@@ -1,5 +1,5 @@
 import { Head, router, usePage } from "@inertiajs/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import TextInput from "@/Components/TextInput";
 import Modal from "@/Components/Modal";
@@ -7,18 +7,42 @@ import Modal from "@/Components/Modal";
 interface Grado {
     id: number;
     nombre: string;
+    codigo: number;
 }
 
 interface Props {
     grados: Grado[];
+    fibonacci: number;
 }
 
-export default function Index({ grados }: Props) {
-    const [nombre, setNombre] = useState("");
+export default function Index({ grados, fibonacci }: Props) {
     const [showModal, setShowModal] = useState(false);
     const [showModalE, setShowModalE] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    
+    const [form, setForm] = useState({
+        nombre: "",
+        codigo: fibonacci,
+    });
+
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        router.post("/grados", form, {
+            onSuccess: () => {
+                setShowModal(false);
+                setForm({
+                    nombre: "",
+                    codigo: fibonacci,
+                });
+            },
+        });
+    };
+
+    
 
     const eliminar = (id: number) => {
         router.delete(route(`grados.destroy`, { id })),
@@ -29,19 +53,10 @@ export default function Index({ grados }: Props) {
                 },
             };
     };
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        router.post(
-            "/grados",
-            { nombre },
-            {
-                onSuccess: () => {
-                    setNombre("");
-                    setShowModal(false);
-                },
-            }
-        );
-    };
+
+    useEffect(() => {
+        setForm({...form, codigo: fibonacci });
+    }, []);
 
     return (
         <AuthenticatedLayout
@@ -78,6 +93,9 @@ export default function Index({ grados }: Props) {
                                         <th className="px-4 py-2 text-left">
                                             Nombre
                                         </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Codigo
+                                        </th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -89,6 +107,9 @@ export default function Index({ grados }: Props) {
                                             </td>
                                             <td className="px-4 py-2">
                                                 {e.nombre}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {e.codigo}
                                             </td>
                                             <td className="px-4 py-2">
                                                 <button
@@ -116,13 +137,25 @@ export default function Index({ grados }: Props) {
                                 <div className="flex flex-col p-6">
                                     <TextInput
                                         type="text"
+                                        name="nombre"
+                                        id="nombre"
                                         className="border rounded px-4 py-2 w-full mb-2"
                                         placeholder="Nombre del grado"
-                                        value={nombre}
-                                        onChange={(e) =>
-                                            setNombre(e.target.value)
-                                        }
+                                        value={form.nombre}
+                                        onChange={(e) => setForm({ ...form, nombre: e.target.value })}
                                         required
+                                    />
+                                    <label className="py-2 px-2">
+                                        Codigo del Grado
+                                    </label>
+                                    <TextInput
+                                        name="codigo"
+                                        id="codigo"
+                                        type="number"
+                                        className="border rounded px-4 py-2 w-full mb-2"
+                                        placeholder="codigo del grado"
+                                        value={form.codigo}
+                                        disabled
                                     />
 
                                     <div className="flex justify-end gap-2 pt-4">
