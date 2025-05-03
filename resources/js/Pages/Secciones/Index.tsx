@@ -95,7 +95,7 @@ export default function Index({ secciones, grados, docentes }: Props) {
                         </div>
                         <table className="w-full text-left">
                             <thead>
-                                <tr className="bg-gray-100 ">
+                                <tr className="bg-gray-100">
                                     <th className="p-3">Nombre</th>
                                     <th className="p-3">Grado</th>
                                     <th className="p-3">Docente</th>

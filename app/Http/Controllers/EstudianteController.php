@@ -84,6 +84,8 @@ class EstudianteController extends Controller
      */
     public function destroy(Estudiante $estudiante)
     {
-        //
+        $estudiante->delete();
+
+        return redirect()->back()->with('success', 'estudiante eliminado exitosamente.');
     }
 }

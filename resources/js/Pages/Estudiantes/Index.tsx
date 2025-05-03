@@ -21,33 +21,33 @@ export interface Grado {
     nombre: string;
 }
 
-
 interface Seccion {
     id: number;
     nombre: string;
 }
-
-
 
 export interface PageProps {
     auth: { user: User | null };
     estudiantes: Estudiante[];
     grados: Grado[];
     secciones: Seccion[];
-    [key: string]: any; 
+    [key: string]: any;
 }
 
 export default function Index() {
     const { estudiantes, grados, secciones } = usePage<any>().props;
 
     const [showModal, setShowModal] = useState(false);
+    const [showModalE, setShowModalE] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [idM, setIdM] = useState<number | null>(null);
     const [form, setForm] = useState({
         nombre: "",
         apellido: "",
         fecha_nacimiento: "",
         genero: "",
         grado_id: "",
-        seccion_id: ""
+        seccion_id: "",
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -56,14 +56,24 @@ export default function Index() {
         router.post("/estudiantes", form, {
             onSuccess: () => {
                 setShowModal(false);
+                setShowModalE(false)
                 setForm({
                     nombre: "",
                     apellido: "",
                     fecha_nacimiento: "",
                     genero: "",
                     grado_id: "",
-                    seccion_id: ""
+                    seccion_id: "",
                 });
+            },
+        });
+    };
+
+    const eliminar = (id: number) => {
+        router.delete(route("estudiantes.destroy", { id }), {
+            onSuccess: () => {
+                setShowModalE(false);
+                setIdM(null);
             },
         });
     };
@@ -82,7 +92,9 @@ export default function Index() {
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                         <div className="flex justify-between items-center mb-6">
-                            <h1 className="text-2xl font-bold">Listado de Estudiantes</h1>
+                            <h1 className="text-2xl font-bold">
+                                Listado de Estudiantes
+                            </h1>
                             <button
                                 onClick={() => setShowModal(true)}
                                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -95,23 +107,61 @@ export default function Index() {
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead>
                                     <tr className="bg-gray-100">
-                                        <th className="px-4 py-2 text-left">Nombre</th>
-                                        <th className="px-4 py-2 text-left">Apellido</th>
-                                        <th className="px-4 py-2 text-left">Género</th>
-                                        <th className="px-4 py-2 text-left">Fecha Nacimiento</th>
-                                        <th className="px-4 py-2 text-left">Grado</th>
-                                        <th className="px-4 py-2 text-left">Sección</th>
+                                        <th className="px-4 py-2 text-left">
+                                            Nombre
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Apellido
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Género
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Fecha Nacimiento
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Grado
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Sección
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Acciones
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                     {estudiantes.map((e: Estudiante) => (
                                         <tr key={e.id}>
-                                            <td className="px-4 py-2">{e.nombre}</td>
-                                            <td className="px-4 py-2">{e.apellido}</td>
-                                            <td className="px-4 py-2">{e.genero}</td>
-                                            <td className="px-4 py-2">{e.fecha_nacimiento}</td>
-                                            <td className="px-4 py-2">{e.grado.nombre}</td>
-                                            <td className="px-4 py-2">{e.seccion.nombre}</td>
+                                            <td className="px-4 py-2">
+                                                {e.nombre}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {e.apellido}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {e.genero}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {e.fecha_nacimiento}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {e.grado.nombre}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {e.seccion.nombre}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                <button
+                                                    onClick={() => {
+                                                        setShowModalE(true);
+                                                        setIdM(e.id);
+                                                    }}
+                                                    className="bg-red-500 rounded text-white px-4 py-2 hover:bg-red-600"
+                                                >
+                                                    Eliminar
+                                                </button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -122,9 +172,15 @@ export default function Index() {
             </div>
 
             {/* Modal de Agregar Estudiante */}
-            <Modal show={showModal} onClose={() => setShowModal(false)} maxWidth="lg">
+            <Modal
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                maxWidth="lg"
+            >
                 <div className="p-6">
-                    <h2 className="text-lg font-semibold mb-4">Agregar Estudiante</h2>
+                    <h2 className="text-lg font-semibold mb-4">
+                        Agregar Estudiante
+                    </h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <input
@@ -132,7 +188,9 @@ export default function Index() {
                                 placeholder="Nombre"
                                 className="w-full border rounded px-3 py-2"
                                 value={form.nombre}
-                                onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+                                onChange={(e) =>
+                                    setForm({ ...form, nombre: e.target.value })
+                                }
                                 required
                             />
                             <input
@@ -140,20 +198,32 @@ export default function Index() {
                                 placeholder="Apellido"
                                 className="w-full border rounded px-3 py-2"
                                 value={form.apellido}
-                                onChange={(e) => setForm({ ...form, apellido: e.target.value })}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        apellido: e.target.value,
+                                    })
+                                }
                                 required
                             />
                             <input
                                 type="date"
                                 className="w-full border rounded px-3 py-2"
                                 value={form.fecha_nacimiento}
-                                onChange={(e) => setForm({ ...form, fecha_nacimiento: e.target.value })}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        fecha_nacimiento: e.target.value,
+                                    })
+                                }
                                 required
                             />
                             <select
                                 className="w-full border rounded px-3 py-2"
                                 value={form.genero}
-                                onChange={(e) => setForm({ ...form, genero: e.target.value })}
+                                onChange={(e) =>
+                                    setForm({ ...form, genero: e.target.value })
+                                }
                                 required
                             >
                                 <option value="">Seleccione género</option>
@@ -163,7 +233,12 @@ export default function Index() {
                             <select
                                 className="w-full border rounded px-3 py-2"
                                 value={form.grado_id}
-                                onChange={(e) => setForm({ ...form, grado_id: e.target.value })}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        grado_id: e.target.value,
+                                    })
+                                }
                                 required
                             >
                                 <option value="">Seleccione grado</option>
@@ -176,7 +251,12 @@ export default function Index() {
                             <select
                                 className="w-full border rounded px-3 py-2"
                                 value={form.seccion_id}
-                                onChange={(e) => setForm({ ...form, seccion_id: e.target.value })}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        seccion_id: e.target.value,
+                                    })
+                                }
                                 required
                             >
                                 <option value="">Seleccione sección</option>
@@ -206,6 +286,51 @@ export default function Index() {
                     </form>
                 </div>
             </Modal>
+             {/* Modal para eliminar Seccion */}
+                                <Modal
+                                    show={showModalE}
+                                    onClose={() => setShowModalE(false)}
+                                    maxWidth="lg"
+                                >
+                                    <div className="p-6">
+                                        <p>
+                                            ¿Estas seguro que deseas eliminar este seccion?
+                                            Esta acción no se puede deshacer.
+                                        </p>
+                                        <div className="flex justify-end gap-2 pt-4">
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowModalE(false)}
+                                                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                                            >
+                                                Cancelar
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    if (!isSubmitting) {
+                                                        setIsSubmitting(true);
+                                                        eliminar(idM!);
+                                                        setTimeout(() => {
+                                                            setShowModalE(false);
+                                                            setIsSubmitting(false);
+                                                        }, 900);
+                                                    }
+                                                }}
+                                                type="submit"
+                                                className={`px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 ${
+                                                    isSubmitting
+                                                        ? "opacity-75 cursor-not-allowed"
+                                                        : ""
+                                                }`}
+                                                disabled={isSubmitting}
+                                            >
+                                                {isSubmitting
+                                                    ? "Eliminando..."
+                                                    : "Eliminar"}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </Modal>
         </AuthenticatedLayout>
     );
 }
