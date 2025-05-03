@@ -1,6 +1,8 @@
 import { Head, router } from "@inertiajs/react";
 import { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import Modal from "@/Components/Modal";
+import TextInput from "@/Components/TextInput";
 
 interface Seccion {
     id: number;
@@ -31,96 +33,218 @@ interface Props {
     docentes: Docente[];
 }
 
-
 export default function Index({ secciones, grados, docentes }: Props) {
     const [form, setForm] = useState({
         nombre: "",
         grado_id: "",
         docente_id: "",
     });
+    const [showModal, setShowModal] = useState(false);
+    const [showModalE, setShowModalE] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [idM, setIdM] = useState<number | null>(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const eliminar = (id: number) => {
+        router.delete(route("secciones.destroy", { id }), {
+            onSuccess: () => {
+                setShowModalE(false);
+                setIdM(null);
+            },
+        });
+    };
+
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         router.post("/secciones", form, {
-            onSuccess: () => setForm({ nombre: "", grado_id: "", docente_id: "" }),
+            onSuccess: () => {
+                setForm({ nombre: "", grado_id: "", docente_id: "" }),
+                    setShowModal(false);
+            },
         });
     };
 
     return (
-        <AuthenticatedLayout header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Secciones</h2>}>
+        <AuthenticatedLayout
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                    Secciones
+                </h2>
+            }
+        >
             <Head title="Secciones" />
 
-            <div className="max-w-4xl mx-auto py-10 bg-white rounded shadow-md px-6 mt-12">
-                {/* <form onSubmit={handleSubmit} className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <input
-                        type="text"
-                        name="nombre"
-                        value={form.nombre}
-                        onChange={handleChange}
-                        placeholder="Nombre (Ej: A)"
-                        className="border rounded px-4 py-2"
-                        required
-                    />
-
-                    <select
-                        name="grado_id"
-                        value={form.grado_id}
-                        onChange={handleChange}
-                        className="border rounded px-4 py-2"
-                        required
-                    >
-                        <option value="">Seleccionar grado</option>
-                        {grados.map((grado) => (
-                            <option key={grado.id} value={grado.id}>
-                                {grado.nombre}
-                            </option>
-                        ))}
-                    </select>
-
-                    <select
-                        name="docente_id"
-                        value={form.docente_id}
-                        onChange={handleChange}
-                        className="border rounded px-4 py-2"
-                    >
-                        <option value="">(Opcional) Docente asignado</option>
-                        {docentes.map((docente) => (
-                            <option key={docente.id} value={docente.id}>
-                                {docente.nombre}
-                            </option>
-                        ))}
-                    </select>
-
-                    <div className="col-span-full">
-                        <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                            Guardar sección
-                        </button>
-                    </div>
-                </form> */}
-
-                <div className="bg-white shadow rounded overflow-x-auto">
-                    <table className="w-full text-left">
-                        <thead>
-                            <tr className="bg-gray-100 text-gray-700">
-                                <th className="p-3">Nombre</th>
-                                <th className="p-3">Grado</th>
-                                <th className="p-3">Docente</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {secciones.map((s) => (
-                                <tr key={s.id} className="border-t">
-                                    <td className="p-3">{s.nombre}</td>
-                                    <td className="p-3">{s.grado?.nombre}</td>
-                                    <td className="p-3">{s.docente?.nombre ?? "No asignado"}</td>
+            <div className="py-12">
+                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        <div className="flex justify-between items-center mb-6">
+                            <h1 className="text-2xl font-bold">
+                                Listado de Secciones
+                            </h1>
+                            <button
+                                onClick={() => setShowModal(true)}
+                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                                Agregar Sección
+                            </button>
+                        </div>
+                        <table className="w-full text-left">
+                            <thead>
+                                <tr className="bg-gray-100 ">
+                                    <th className="p-3">Nombre</th>
+                                    <th className="p-3">Grado</th>
+                                    <th className="p-3">Docente</th>
+                                    <th className="p-3">Acciones</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {secciones.map((s) => (
+                                    <tr key={s.id} className="border-t">
+                                        <td className="p-3">{s.nombre}</td>
+                                        <td className="p-3">
+                                            {s.grado?.nombre}
+                                        </td>
+                                        <td className="p-3">
+                                            {s.docente?.nombre ?? "No asignado"}
+                                        </td>
+                                        <td className="px-4 py-2">
+                                            <button
+                                                onClick={() => {
+                                                    setShowModalE(true);
+                                                    setIdM(s.id);
+                                                   
+                                                }}
+                                                className="bg-red-500 rounded text-white px-4 py-2 hover:bg-red-600"
+                                            >
+                                                Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <Modal
+                        show={showModal}
+                        onClose={() => setShowModal(false)}
+                        maxWidth="lg"
+                    >
+                        <form onSubmit={handleSubmit} className="mb-6  gap-4">
+                            <div className="flex flex-col p-6">
+                                <TextInput
+                                    type="text"
+                                    name="nombre"
+                                    value={form.nombre}
+                                    onChange={handleChange}
+                                    placeholder="Nombre (Ej: A)"
+                                    className="border rounded px-4 py-2 w-full mb-2"
+                                    required
+                                />
+
+                                <select
+                                    name="grado_id"
+                                    value={form.grado_id}
+                                    onChange={handleChange}
+                                    className="border rounded px-4 py-2 w-full mb-2"
+                                    required
+                                >
+                                    <option value="">Seleccionar grado</option>
+                                    {grados.map((grado) => (
+                                        <option key={grado.id} value={grado.id}>
+                                            {grado.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+
+                                <select
+                                    name="docente_id"
+                                    value={form.docente_id}
+                                    onChange={handleChange}
+                                    className="border rounded px-4 py-2 w-full mb-2"
+                                >
+                                    <option value="">
+                                        Seleccionar Docente
+                                    </option>
+                                    {docentes.map((docente) => (
+                                        <option
+                                            key={docente.id}
+                                            value={docente.id}
+                                        >
+                                            {docente.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+
+                                <div className="flex justify-end space-x-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowModal(false)}
+                                        className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                                    >
+                                        Guardar sección
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </Modal>
+
+                    {/* Modal para eliminar Seccion */}
+                    <Modal
+                        show={showModalE}
+                        onClose={() => setShowModalE(false)}
+                        maxWidth="lg"
+                    >
+                        <div className="p-6">
+                            <p>
+                                ¿Estas seguro que deseas eliminar este seccion?
+                                Esta acción no se puede deshacer.
+                            </p>
+                            <div className="flex justify-end gap-2 pt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModalE(false)}
+                                    className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        if (!isSubmitting) {
+                                            setIsSubmitting(true);
+                                            eliminar(idM!);
+                                            setTimeout(() => {
+                                                setShowModalE(false);
+                                                setIsSubmitting(false);
+                                            }, 900);
+                                        }
+                                    }}
+                                    type="submit"
+                                    className={`px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 ${
+                                        isSubmitting
+                                            ? "opacity-75 cursor-not-allowed"
+                                            : ""
+                                    }`}
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting
+                                        ? "Eliminando..."
+                                        : "Eliminar"}
+                                </button>
+                            </div>
+                        </div>
+                    </Modal>
                 </div>
             </div>
         </AuthenticatedLayout>

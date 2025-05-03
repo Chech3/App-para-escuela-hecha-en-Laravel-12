@@ -82,7 +82,7 @@ export default function Index() {
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead>
-                                    <tr className="bg-gray-100">
+                                    <tr className="bg-gray-100 ">
                                         <th className="px-4 py-2 text-left">
                                             Nombre
                                         </th>
@@ -99,7 +99,7 @@ export default function Index() {
                                             Correo
                                         </th>
                                         <th className="px-4 py-2 text-left">
-                                            acciones
+                                            Acciones
                                         </th>
                                     </tr>
                                 </thead>

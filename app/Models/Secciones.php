@@ -12,6 +12,7 @@ class Secciones extends Model
     protected $table = 'secciones';
 
     protected $fillable = [
+        'id',
         'nombre',
         'grado_id',
         'docente_id',

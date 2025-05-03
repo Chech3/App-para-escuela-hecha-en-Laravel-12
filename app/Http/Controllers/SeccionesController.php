@@ -38,7 +38,7 @@ class SeccionesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Secciones $secciones)
+    public function show(Secciones $seccione)
     {
         //
     }
@@ -46,7 +46,7 @@ class SeccionesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Secciones $secciones)
+    public function edit(Secciones $seccione)
     {
         //
     }
@@ -54,7 +54,7 @@ class SeccionesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Secciones $secciones)
+    public function update(Request $request, Secciones $seccione)
     {
         //
     }
@@ -62,8 +62,10 @@ class SeccionesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Secciones $secciones)
+    public function destroy(Secciones $seccione)
     {
-        //
+        $seccione->delete();
+
+        return redirect()->back()->with('success', 'seccion eliminada exitosamente.');
     }
 }
