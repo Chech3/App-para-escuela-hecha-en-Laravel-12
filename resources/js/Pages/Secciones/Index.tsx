@@ -56,6 +56,9 @@ export default function Index({ secciones, grados, docentes }: Props) {
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
+        if (e.target.name === "nombre" && e.target.value.length > 9) {
+      return;
+    }
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
@@ -117,7 +120,6 @@ export default function Index({ secciones, grados, docentes }: Props) {
                                                 onClick={() => {
                                                     setShowModalE(true);
                                                     setIdM(s.id);
-                                                   
                                                 }}
                                                 className="bg-red-500 rounded text-white px-4 py-2 hover:bg-red-600"
                                             >
@@ -137,49 +139,63 @@ export default function Index({ secciones, grados, docentes }: Props) {
                     >
                         <form onSubmit={handleSubmit} className="mb-6  gap-4">
                             <div className="flex flex-col p-6">
-                                <TextInput
-                                    type="text"
-                                    name="nombre"
-                                    value={form.nombre}
-                                    onChange={handleChange}
-                                    placeholder="Nombre (Ej: A)"
-                                    className="border rounded px-4 py-2 w-full mb-2"
-                                    required
-                                />
-
-                                <select
-                                    name="grado_id"
-                                    value={form.grado_id}
-                                    onChange={handleChange}
-                                    className="border rounded px-4 py-2 w-full mb-2"
-                                    required
-                                >
-                                    <option value="">Seleccionar grado</option>
-                                    {grados.map((grado) => (
-                                        <option key={grado.id} value={grado.id}>
-                                            {grado.nombre}
+                                <div>
+                                    <label htmlFor="">
+                                        Nombre de la sección
+                                    </label>
+                                    <TextInput
+                                        type="text"
+                                        name="nombre"
+                                        value={form.nombre}
+                                        onChange={handleChange}
+                                        placeholder="Nombre de la sección (Ej: A)"
+                                        className="border rounded px-4 py-2 w-full mb-2"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="">Grado</label>
+                                    <select
+                                        name="grado_id"
+                                        value={form.grado_id}
+                                        onChange={handleChange}
+                                        className="border rounded px-4 py-2 w-full mb-2"
+                                        required
+                                    >
+                                        <option value="">
+                                            Seleccionar grado
                                         </option>
-                                    ))}
-                                </select>
-
-                                <select
-                                    name="docente_id"
-                                    value={form.docente_id}
-                                    onChange={handleChange}
-                                    className="border rounded px-4 py-2 w-full mb-2"
-                                >
-                                    <option value="">
-                                        Seleccionar Docente
-                                    </option>
-                                    {docentes.map((docente) => (
-                                        <option
-                                            key={docente.id}
-                                            value={docente.id}
-                                        >
-                                            {docente.nombre}
+                                        {grados.map((grado) => (
+                                            <option
+                                                key={grado.id}
+                                                value={grado.id}
+                                            >
+                                                {grado.nombre}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="">Docente</label>
+                                    <select
+                                        name="docente_id"
+                                        value={form.docente_id}
+                                        onChange={handleChange}
+                                        className="border rounded px-4 py-2 w-full mb-2"
+                                    >
+                                        <option value="">
+                                            Seleccionar Docente
                                         </option>
-                                    ))}
-                                </select>
+                                        {docentes.map((docente) => (
+                                            <option
+                                                key={docente.id}
+                                                value={docente.id}
+                                            >
+                                                {docente.nombre}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
 
                                 <div className="flex justify-end space-x-3">
                                     <button

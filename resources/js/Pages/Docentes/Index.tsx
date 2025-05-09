@@ -161,70 +161,110 @@ export default function Index() {
                     </h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <TextInput
-                                type="text"
-                                placeholder="Nombre"
-                                value={form.nombre}
-                                onChange={(e) =>
-                                    setForm({ ...form, nombre: e.target.value })
-                                }
-                                required
-                            />
-                            <TextInput
-                                type="text"
-                                placeholder="Apellido"
-                                value={form.apellido}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        apellido: e.target.value,
-                                    })
-                                }
-                                required
-                            />
-                            <TextInput
-                                type="text"
-                                placeholder="Especialidad"
-                                value={form.especialidad}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        especialidad: e.target.value,
-                                    })
-                                }
-                                required
-                            />
-
-                            <TextInput
-                                type="email"
-                                placeholder="Correo"
-                                value={form.correo}
-                                onChange={(e) =>
-                                    setForm({ ...form, correo: e.target.value })
-                                }
-                                required
-                            />
-
-                            <select
-                                value={form.horario_id}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        horario_id: e.target.value,
-                                    })
-                                }
-                                required
-                                className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            >
-                                <option value="">Selecciona un horario</option>
-                                {horarios.map((horario: any) => (
-                                    <option key={horario.id} value={horario.id}>
-                                        {horario.nombre} (
-                                        {convertirHoraAMPM(horario.hora_inicio)}
-                                        - {convertirHoraAMPM(horario.hora_fin)})
+                            <div>
+                                <label
+                                    htmlFor="nombre"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Nombre
+                                </label>
+                                <TextInput
+                                    type="text"
+                                    placeholder="Nombre"
+                                    value={form.nombre}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            nombre: e.target.value,
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="apellido"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Apellido
+                                </label>
+                                <TextInput
+                                    type="text"
+                                    placeholder="Apellido"
+                                    value={form.apellido}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            apellido: e.target.value,
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="">Especialidad</label>
+                                <TextInput
+                                    type="text"
+                                    placeholder="Especialidad"
+                                    value={form.especialidad}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            especialidad: e.target.value,
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="">Correo</label>
+                                <TextInput
+                                    type="email"
+                                    placeholder="Correo"
+                                    value={form.correo}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            correo: e.target.value,
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="">Horario</label>
+                                <select
+                                    value={form.horario_id}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            horario_id: e.target.value,
+                                        })
+                                    }
+                                    required
+                                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                >
+                                    <option value="">
+                                        Selecciona un horario
                                     </option>
-                                ))}
-                            </select>
+                                    {horarios.map((horario: any) => (
+                                        <option
+                                            key={horario.id}
+                                            value={horario.id}
+                                        >
+                                            {horario.nombre} (
+                                            {convertirHoraAMPM(
+                                                horario.hora_inicio
+                                            )}
+                                            -{" "}
+                                            {convertirHoraAMPM(
+                                                horario.hora_fin
+                                            )}
+                                            )
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
 
                         <div className="flex justify-end gap-2 pt-4">

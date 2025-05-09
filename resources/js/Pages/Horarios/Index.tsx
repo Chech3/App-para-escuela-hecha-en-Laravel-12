@@ -23,9 +23,10 @@ export default function Index({ horarios }: Props) {
     const [showModalE, setShowModalE] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [show, setShow] = useState(true);
 
     const eliminar = (id: number) => {
-        router.delete(route('horarios.destroy', { id }), {
+        router.delete(route("horarios.destroy", { id }), {
             onSuccess: () => {
                 setShowModalE(false);
                 setIdM(null);
@@ -36,7 +37,7 @@ export default function Index({ horarios }: Props) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         router.post(
-            route('horarios.store'),
+            route("horarios.store"),
             { dia, hora_inicio: horaInicio, hora_fin: horaFin },
             {
                 onSuccess: () => {
@@ -49,7 +50,6 @@ export default function Index({ horarios }: Props) {
         );
     };
 
-    
     return (
         <AuthenticatedLayout
             header={
@@ -79,20 +79,40 @@ export default function Index({ horarios }: Props) {
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead>
                                     <tr className="bg-gray-100">
-                                        <th className="px-4 py-2 text-left">ID</th>
-                                        <th className="px-4 py-2 text-left">Día</th>
-                                        <th className="px-4 py-2 text-left">Hora Inicio</th>
-                                        <th className="px-4 py-2 text-left">Hora Fin</th>
-                                        <th className="px-4 py-2 text-left">Acciones</th>
+                                        <th className="px-4 py-2 text-left">
+                                            ID
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Día
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Hora Inicio
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Hora Fin
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Acciones
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                     {horarios.map((e) => (
                                         <tr key={e.id}>
-                                            <td className="px-4 py-2">{e.id}</td>
-                                            <td className="px-4 py-2">{e.dia}</td>
-                                            <td className="px-4 py-2">{convertirHoraAMPM(e.hora_inicio)}</td>
-                                            <td className="px-4 py-2">{convertirHoraAMPM(e.hora_fin)}</td>
+                                            <td className="px-4 py-2">
+                                                {e.id}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {e.dia}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {convertirHoraAMPM(
+                                                    e.hora_inicio
+                                                )}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {convertirHoraAMPM(e.hora_fin)}
+                                            </td>
                                             <td className="px-4 py-2">
                                                 <button
                                                     onClick={() => {
@@ -118,28 +138,44 @@ export default function Index({ horarios }: Props) {
                         >
                             <form onSubmit={handleSubmit} className="mb-6">
                                 <div className="flex flex-col p-6">
-                                    <TextInput
-                                        type="text"
-                                        className="border rounded px-4 py-2 w-full mb-2"
-                                        placeholder="Día (ej: Lunes)"
-                                        value={dia}
-                                        onChange={(e) => setDia(e.target.value)}
-                                        required
-                                    />
-                                    <TextInput
-                                        type="time"
-                                        className="border rounded px-4 py-2 w-full mb-2"
-                                        value={horaInicio}
-                                        onChange={(e) => setHoraInicio(e.target.value)}
-                                        required
-                                    />
+                                    <div>
+                                        <label htmlFor="">Dias</label>
+                                        <TextInput
+                                            type="text"
+                                            className="border rounded px-4 py-2 w-full mb-2"
+                                            placeholder="Días (ej: Lunes a Viernes)"
+                                            value={dia}
+                                            onChange={(e) =>
+                                                setDia(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="">Hora inicio</label>
+                                        <TextInput
+                                            type="time"
+                                            className="border rounded px-4 py-2 w-full mb-2"
+                                            value={horaInicio}
+                                            onChange={(e) =>
+                                                setHoraInicio(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                            <label htmlFor="">Hora Final</label>
                                     <TextInput
                                         type="time"
                                         className="border rounded px-4 py-2 w-full mb-2"
                                         value={horaFin}
-                                        onChange={(e) => setHoraFin(e.target.value)}
+                                        onChange={(e) =>
+                                            setHoraFin(e.target.value)
+                                        }
                                         required
                                     />
+                                    </div>
 
                                     <div className="flex justify-end gap-2 pt-4">
                                         <button
@@ -168,8 +204,8 @@ export default function Index({ horarios }: Props) {
                         >
                             <div className="p-6">
                                 <p>
-                                    ¿Estas seguro que deseas eliminar este horario?
-                                    Esta acción no se puede deshacer.
+                                    ¿Estas seguro que deseas eliminar este
+                                    horario? Esta acción no se puede deshacer.
                                 </p>
                                 <div className="flex justify-end gap-2 pt-4">
                                     <button
@@ -198,7 +234,9 @@ export default function Index({ horarios }: Props) {
                                         }`}
                                         disabled={isSubmitting}
                                     >
-                                        {isSubmitting ? "Eliminando..." : "Eliminar"}
+                                        {isSubmitting
+                                            ? "Eliminando..."
+                                            : "Eliminar"}
                                     </button>
                                 </div>
                             </div>

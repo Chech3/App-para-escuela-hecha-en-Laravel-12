@@ -86,6 +86,6 @@ class EstudianteController extends Controller
     {
         $estudiante->delete();
 
-        return redirect()->back()->with('success', 'estudiante eliminado exitosamente.');
+        return redirect()->back()->with('success', 'Estudiante eliminado exitosamente.');
     }
 }

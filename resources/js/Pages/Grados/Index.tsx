@@ -21,12 +21,10 @@ export default function Index({ grados, fibonacci }: Props) {
     const [idM, setIdM] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    
     const [form, setForm] = useState({
         nombre: "",
         codigo: fibonacci,
     });
-
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -42,8 +40,6 @@ export default function Index({ grados, fibonacci }: Props) {
         });
     };
 
-    
-
     const eliminar = (id: number) => {
         router.delete(route(`grados.destroy`, { id })),
             {
@@ -55,7 +51,7 @@ export default function Index({ grados, fibonacci }: Props) {
     };
 
     useEffect(() => {
-        setForm({...form, codigo: fibonacci });
+        setForm({ ...form, codigo: fibonacci });
     }, []);
 
     return (
@@ -135,28 +131,40 @@ export default function Index({ grados, fibonacci }: Props) {
                         >
                             <form onSubmit={handleSubmit} className="mb-6">
                                 <div className="flex flex-col p-6">
-                                    <TextInput
-                                        type="text"
-                                        name="nombre"
-                                        id="nombre"
-                                        className="border rounded px-4 py-2 w-full mb-2"
-                                        placeholder="Nombre del grado"
-                                        value={form.nombre}
-                                        onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-                                        required
-                                    />
-                                    <label className="py-2 px-2">
-                                        Codigo del Grado
-                                    </label>
-                                    <TextInput
-                                        name="codigo"
-                                        id="codigo"
-                                        type="number"
-                                        className="border rounded px-4 py-2 w-full mb-2"
-                                        placeholder="codigo del grado"
-                                        value={form.codigo}
-                                        disabled
-                                    />
+                                    <div>
+                                        <label className="py-2 px-2">
+                                            Nombre del Grado
+                                        </label>
+                                        <TextInput
+                                            type="text"
+                                            name="nombre"
+                                            id="nombre"
+                                            className="border rounded px-4 py-2 w-full mb-2"
+                                            placeholder="Nombre del grado"
+                                            value={form.nombre}
+                                            onChange={(e) =>
+                                                setForm({
+                                                    ...form,
+                                                    nombre: e.target.value,
+                                                })
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="py-2 px-2">
+                                            Codigo del Grado
+                                        </label>
+                                        <TextInput
+                                            name="codigo"
+                                            id="codigo"
+                                            type="number"
+                                            className="border rounded px-4 py-2 w-full mb-2"
+                                            placeholder="codigo del grado"
+                                            value={form.codigo}
+                                            disabled
+                                        />
+                                    </div>
 
                                     <div className="flex justify-end gap-2 pt-4">
                                         <button

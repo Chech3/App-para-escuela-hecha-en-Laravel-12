@@ -56,7 +56,7 @@ export default function Index() {
         router.post("/estudiantes", form, {
             onSuccess: () => {
                 setShowModal(false);
-                setShowModalE(false)
+                setShowModalE(false);
                 setForm({
                     nombre: "",
                     apellido: "",
@@ -183,89 +183,121 @@ export default function Index() {
                     </h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input
-                                type="text"
-                                placeholder="Nombre"
-                                className="w-full border rounded px-3 py-2"
-                                value={form.nombre}
-                                onChange={(e) =>
-                                    setForm({ ...form, nombre: e.target.value })
-                                }
-                                required
-                            />
-                            <input
-                                type="text"
-                                placeholder="Apellido"
-                                className="w-full border rounded px-3 py-2"
-                                value={form.apellido}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        apellido: e.target.value,
-                                    })
-                                }
-                                required
-                            />
-                            <input
-                                type="date"
-                                className="w-full border rounded px-3 py-2"
-                                value={form.fecha_nacimiento}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        fecha_nacimiento: e.target.value,
-                                    })
-                                }
-                                required
-                            />
-                            <select
-                                className="w-full border rounded px-3 py-2"
-                                value={form.genero}
-                                onChange={(e) =>
-                                    setForm({ ...form, genero: e.target.value })
-                                }
-                                required
-                            >
-                                <option value="">Seleccione género</option>
-                                <option value="Masculino">Masculino</option>
-                                <option value="Femenino">Femenino</option>
-                            </select>
-                            <select
-                                className="w-full border rounded px-3 py-2"
-                                value={form.grado_id}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        grado_id: e.target.value,
-                                    })
-                                }
-                                required
-                            >
-                                <option value="">Seleccione grado</option>
-                                {grados?.map((grado: Grado) => (
-                                    <option key={grado.id} value={grado.id}>
-                                        {grado.nombre}
-                                    </option>
-                                ))}
-                            </select>
-                            <select
-                                className="w-full border rounded px-3 py-2"
-                                value={form.seccion_id}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        seccion_id: e.target.value,
-                                    })
-                                }
-                                required
-                            >
-                                <option value="">Seleccione sección</option>
-                                {secciones?.map((seccion: Seccion) => (
-                                    <option key={seccion.id} value={seccion.id}>
-                                        {seccion.nombre}
-                                    </option>
-                                ))}
-                            </select>
+                            <div>
+                                <label htmlFor="nombre">Nombre</label>
+                                <input
+                                    type="text"
+                                    placeholder="Nombre"
+                                    className="w-full border rounded px-3 py-2"
+                                    value={form.nombre}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            nombre: e.target.value,
+                                        })
+                                    }
+                                    maxLength={9}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="apellido">Apellido</label>
+                                <input
+                                    type="text"
+                                    placeholder="Apellido"
+                                    className="w-full border rounded px-3 py-2"
+                                    value={form.apellido}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            apellido: e.target.value,
+                                        })
+                                    }
+                                    maxLength={9}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="fecha_nacimiento">
+                                    Fecha de Nacimiento
+                                </label>
+                                <input
+                                    type="date"
+                                    className="w-full border rounded px-3 py-2"
+                                    value={form.fecha_nacimiento}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            fecha_nacimiento: e.target.value,
+                                        })
+                                    }
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label htmlFor="">Género</label>
+                                <select
+                                    className="w-full border rounded px-3 py-2"
+                                    value={form.genero}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            genero: e.target.value,
+                                        })
+                                    }
+                                    required
+                                >
+                                    <option value="">Seleccione género</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Femenino">Femenino</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label htmlFor="">Grado</label>
+                                <select
+                                    className="w-full border rounded px-3 py-2"
+                                    value={form.grado_id}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            grado_id: e.target.value,
+                                        })
+                                    }
+                                    required
+                                >
+                                    <option value="">Seleccione grado</option>
+                                    {grados?.map((grado: Grado) => (
+                                        <option key={grado.id} value={grado.id}>
+                                            {grado.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label htmlFor="">Seccion</label>
+                                <select
+                                    className="w-full border rounded px-3 py-2"
+                                    value={form.seccion_id}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            seccion_id: e.target.value,
+                                        })
+                                    }
+                                    required
+                                >
+                                    <option value="">Seleccione sección</option>
+                                    {secciones?.map((seccion: Seccion) => (
+                                        <option
+                                            key={seccion.id}
+                                            value={seccion.id}
+                                        >
+                                            {seccion.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
 
                         <div className="flex justify-end gap-2 pt-4">
@@ -286,51 +318,49 @@ export default function Index() {
                     </form>
                 </div>
             </Modal>
-             {/* Modal para eliminar Seccion */}
-                                <Modal
-                                    show={showModalE}
-                                    onClose={() => setShowModalE(false)}
-                                    maxWidth="lg"
-                                >
-                                    <div className="p-6">
-                                        <p>
-                                            ¿Estas seguro que deseas eliminar este seccion?
-                                            Esta acción no se puede deshacer.
-                                        </p>
-                                        <div className="flex justify-end gap-2 pt-4">
-                                            <button
-                                                type="button"
-                                                onClick={() => setShowModalE(false)}
-                                                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                                            >
-                                                Cancelar
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    if (!isSubmitting) {
-                                                        setIsSubmitting(true);
-                                                        eliminar(idM!);
-                                                        setTimeout(() => {
-                                                            setShowModalE(false);
-                                                            setIsSubmitting(false);
-                                                        }, 900);
-                                                    }
-                                                }}
-                                                type="submit"
-                                                className={`px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 ${
-                                                    isSubmitting
-                                                        ? "opacity-75 cursor-not-allowed"
-                                                        : ""
-                                                }`}
-                                                disabled={isSubmitting}
-                                            >
-                                                {isSubmitting
-                                                    ? "Eliminando..."
-                                                    : "Eliminar"}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </Modal>
+            {/* Modal para eliminar Seccion */}
+            <Modal
+                show={showModalE}
+                onClose={() => setShowModalE(false)}
+                maxWidth="lg"
+            >
+                <div className="p-6">
+                    <p>
+                        ¿Estas seguro que deseas eliminar este seccion? Esta
+                        acción no se puede deshacer.
+                    </p>
+                    <div className="flex justify-end gap-2 pt-4">
+                        <button
+                            type="button"
+                            onClick={() => setShowModalE(false)}
+                            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={() => {
+                                if (!isSubmitting) {
+                                    setIsSubmitting(true);
+                                    eliminar(idM!);
+                                    setTimeout(() => {
+                                        setShowModalE(false);
+                                        setIsSubmitting(false);
+                                    }, 900);
+                                }
+                            }}
+                            type="submit"
+                            className={`px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 ${
+                                isSubmitting
+                                    ? "opacity-75 cursor-not-allowed"
+                                    : ""
+                            }`}
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? "Eliminando..." : "Eliminar"}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </AuthenticatedLayout>
     );
 }

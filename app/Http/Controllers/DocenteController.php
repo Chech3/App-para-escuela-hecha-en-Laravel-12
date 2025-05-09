@@ -9,20 +9,20 @@ use Inertia\Inertia;
 
 class DocenteController extends Controller
 {
-   
+
     public function index()
     {
         $docentes = Docente::with('horario')->get();
 
-        $horarios = Horario::all(); 
+        $horarios = Horario::all();
         // $docentes = Docente::all();
         return Inertia::render('Docentes/Index', [
             'docentes' => $docentes,
-            'horarios' => $horarios, 
+            'horarios' => $horarios,
         ]);
     }
 
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -32,8 +32,12 @@ class DocenteController extends Controller
         ]);
 
         Docente::create($request->all());
-
-        return redirect()->route('docente.index')->with('success', 'Docente creado con éxito.');
+        
+        return redirect()->route('docente.index')
+            ->with('flash', [
+                'message' => 'Docente registrado con éxito.',
+                'success' => true
+            ]);
     }
 
     /**

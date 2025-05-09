@@ -73,8 +73,16 @@ class HorarioController extends Controller
      */
     public function destroy(Horario $horario)
     {
+        if ($horario->docentes()->exists()) {
+
+            return redirect()->back()->with('error', 'No se puede eliminar el horario porque está asignado a uno o más docentes.');
+        }
+
         $horario->delete();
 
-        return redirect()->back()->with('success', 'Horario eliminado exitosamente.');
+        return redirect()->back()->with([
+            'success' => 'Horario eliminado correctamente.'
+        ]);
+
     }
 }

@@ -14,8 +14,9 @@ class Horario extends Model
 
    
 
-    public function docente()
-    {
-        return $this->belongsTo(Docente::class);
-    }
+    public function docentes()
+{
+    return $this->hasMany(Docente::class);
+}
+    
 }
