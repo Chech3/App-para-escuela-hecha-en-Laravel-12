@@ -15,7 +15,11 @@ export default function UpdateProfileInformation({
     status?: string;
     className?: string;
 }) {
-    const user = usePage().props.auth.user;
+    const user = usePage().props.auth?.user;
+
+    if (!user) {
+    return <div className="text-center p-4">Cargando...</div>; // Puedes usar un loader también
+}
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({

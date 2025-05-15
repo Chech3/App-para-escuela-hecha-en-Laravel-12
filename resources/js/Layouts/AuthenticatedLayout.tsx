@@ -10,7 +10,11 @@ export default function Authenticated({
     header,
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
-    const user = usePage().props.auth.user;
+    const user = usePage().props.auth?.user;
+
+    if (!user) {
+    return <div className="text-center p-4">Cargando...</div>; // Puedes usar un loader también
+}
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);

@@ -4,13 +4,21 @@ import { usePage } from "@inertiajs/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
+type FlashMessage = {
+  message?: {
+    success?: string;
+    error?: string;
+  };
+};
+
 const ToastHandler = () => {
-  const { props } = usePage();
-
+  
+  const flash = (usePage().props as unknown as { flash?: FlashMessage }).flash;
   useEffect(() => {
-    const flash = props.flash;
+    // const flash = props.flash;
 
-    if (flash?.message.success) {
+    if (flash?.message?.success) {
       toast.success(flash?.message.success, {
         position: "top-center",
         autoClose: 2000,
@@ -20,7 +28,7 @@ const ToastHandler = () => {
       });
     }
 
-    if (flash?.message.error) {
+    if (flash?.message?.error) {
       toast.error(flash?.message.error, {
         position: "top-center",
         autoClose: 2000,
@@ -29,7 +37,7 @@ const ToastHandler = () => {
         theme: "colored",
       });
     }
-  }, [props.flash]);
+  }, [flash]);
 
   return <ToastContainer />;
 };
