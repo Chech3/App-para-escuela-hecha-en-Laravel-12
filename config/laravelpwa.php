@@ -13,35 +13,35 @@ return [
         'status_bar'=> 'black',
         'icons' => [
             '72x72' => [
-                'path' => '/escudo.jpg',
+                'path' => '/escudob.png',
                 'purpose' => 'any'
             ],
             '96x96' => [
-                'path' => '/escudo.jpg',
+                'path' => '/escudob.png',
                 'purpose' => 'any'
             ],
             '128x128' => [
-                'path' => '/escudo.jpg',
+                'path' => '/escudob.png',
                 'purpose' => 'any'
             ],
             '144x144' => [
-                'path' => '/escudo.jpg',
+                'path' => '/escudob.png',
                 'purpose' => 'any'
             ],
             '152x152' => [
-                'path' => '/escudo.jpg',
+                'path' => '/escudob.png',
                 'purpose' => 'any'
             ],
             '192x192' => [
-                'path' => '/escudo.jpg',
+                'path' => '/escudob.png',
                 'purpose' => 'any'
             ],
             '384x384' => [
-                'path' => '/escudo.jpg',
+                'path' => '/escudob.png',
                 'purpose' => 'any'
             ],
             '512x512' => [
-                'path' => '/escudo.jpg',
+                'path' => '/escudob.png',
                 'purpose' => 'any'
             ],
         ],
@@ -63,7 +63,7 @@ return [
                 'description' => 'Acceso directo para registrar asistencia',
                 'url' => '/registro',
                 'icons' => [
-                    "src" => "/escudo.jpg",
+                    "src" => "/escudob.png",
                     "purpose" => "any"
                 ]
             ],
