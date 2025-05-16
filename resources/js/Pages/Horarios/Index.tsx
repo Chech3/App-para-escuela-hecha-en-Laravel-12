@@ -23,7 +23,6 @@ export default function Index({ horarios }: Props) {
     const [showModalE, setShowModalE] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [show, setShow] = useState(true);
 
     const eliminar = (id: number) => {
         router.delete(route("horarios.destroy", { id }), {
@@ -36,6 +35,7 @@ export default function Index({ horarios }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSubmitting(true);
         router.post(
             route("horarios.store"),
             { dia, hora_inicio: horaInicio, hora_fin: horaFin },
@@ -45,6 +45,7 @@ export default function Index({ horarios }: Props) {
                     setHoraInicio("");
                     setHoraFin("");
                     setShowModal(false);
+                    setIsSubmitting(false);
                 },
             }
         );
@@ -165,16 +166,16 @@ export default function Index({ horarios }: Props) {
                                         />
                                     </div>
                                     <div>
-                                            <label htmlFor="">Hora Final</label>
-                                    <TextInput
-                                        type="time"
-                                        className="border rounded px-4 py-2 w-full mb-2"
-                                        value={horaFin}
-                                        onChange={(e) =>
-                                            setHoraFin(e.target.value)
-                                        }
-                                        required
-                                    />
+                                        <label htmlFor="">Hora Final</label>
+                                        <TextInput
+                                            type="time"
+                                            className="border rounded px-4 py-2 w-full mb-2"
+                                            value={horaFin}
+                                            onChange={(e) =>
+                                                setHoraFin(e.target.value)
+                                            }
+                                            required
+                                        />
                                     </div>
 
                                     <div className="flex justify-end gap-2 pt-4">
@@ -187,7 +188,8 @@ export default function Index({ horarios }: Props) {
                                         </button>
                                         <button
                                             type="submit"
-                                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                            disabled={isSubmitting}
+                                            className="px-4 py-2 disabled:opacity-50 bg-blue-600 text-white rounded hover:bg-blue-700"
                                         >
                                             Guardar
                                         </button>
@@ -217,14 +219,12 @@ export default function Index({ horarios }: Props) {
                                     </button>
                                     <button
                                         onClick={() => {
-                                            if (!isSubmitting) {
-                                                setIsSubmitting(true);
-                                                eliminar(idM!);
-                                                setTimeout(() => {
-                                                    setShowModalE(false);
-                                                    setIsSubmitting(false);
-                                                }, 900);
-                                            }
+                                            setIsSubmitting(true);
+                                            eliminar(idM!);
+                                            setTimeout(() => {
+                                                setShowModalE(false);
+                                                setIsSubmitting(false);
+                                            }, 900);
                                         }}
                                         type="submit"
                                         className={`px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 ${

@@ -21,6 +21,10 @@ Route::get('/', function () {
     ]);
 });
 
+route::get('offline', function () {
+    return Inertia::render('Offline');
+})->name('offline');
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
