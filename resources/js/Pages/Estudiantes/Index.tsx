@@ -8,6 +8,7 @@ export interface Estudiante {
     id: number;
     nombre: string;
     apellido: string;
+    cedula?: number;
     fecha_nacimiento: string;
     genero: string;
     grado_id: number;
@@ -45,6 +46,7 @@ export default function Index() {
         nombre: "",
         apellido: "",
         fecha_nacimiento: "",
+        cedula: "",
         genero: "",
         grado_id: "",
         seccion_id: "",
@@ -60,6 +62,7 @@ export default function Index() {
                 setForm({
                     nombre: "",
                     apellido: "",
+                    cedula: "",
                     fecha_nacimiento: "",
                     genero: "",
                     grado_id: "",
@@ -117,7 +120,7 @@ export default function Index() {
                                             Género
                                         </th>
                                         <th className="px-4 py-2 text-left">
-                                            Fecha Nacimiento
+                                            Cedula
                                         </th>
                                         <th className="px-4 py-2 text-left">
                                             Grado
@@ -143,7 +146,7 @@ export default function Index() {
                                                 {e.genero}
                                             </td>
                                             <td className="px-4 py-2">
-                                                {e.fecha_nacimiento}
+                                                {e.cedula ?? "N/P"}
                                             </td>
                                             <td className="px-4 py-2">
                                                 {e.grado.nombre}
@@ -151,16 +154,34 @@ export default function Index() {
                                             <td className="px-4 py-2">
                                                 {e.seccion.nombre}
                                             </td>
-                                            <td className="px-4 py-2">
+                                            <td className="px-4 py-2 space-x-2 flex">
                                                 <button
                                                     onClick={() => {
                                                         setShowModalE(true);
                                                         setIdM(e.id);
                                                     }}
-                                                    className="bg-red-500 rounded text-white px-4 py-2 hover:bg-red-600"
+                                                    className="bg-red-500 rounded px-2 py-2 hover:bg-red-600"
                                                 >
-                                                    Eliminar
+                                                    <img className="h-4 w-4" src="/delete.svg" alt="eliminar" />
                                                 </button>
+
+                                                <a
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    href={`/constancia/${e.id}`}
+                                                    className="bg-blue-500 rounded px-2 py-2 hover:bg-blue-600"
+                                                >
+                                                    <img className="h-4 w-4" src="/print.svg" alt="Imprimit" />
+                                                </a>
+
+                                                 <a
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    href={`/constancia-estudio/${e.id}`}
+                                                    className="bg-green-500 rounded px-2 py-2 hover:bg-green-600"
+                                                >
+                                                    <img className="h-4 w-4" src="/print.svg" alt="Imprimit" />
+                                                </a>
                                             </td>
                                         </tr>
                                     ))}
@@ -297,6 +318,22 @@ export default function Index() {
                                         </option>
                                     ))}
                                 </select>
+                            </div>
+
+                            <div>
+                                <label htmlFor="">Cedula</label>
+                                <input
+                                    type="number"
+                                    className="w-full border rounded px-3 py-2"
+                                    value={form.cedula}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            cedula: e.target.value,
+                                        })
+                                    }
+                                    placeholder="32123466"
+                                />
                             </div>
                         </div>
 

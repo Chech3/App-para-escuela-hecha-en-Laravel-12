@@ -137,7 +137,7 @@ export default function Index() {
                                                     }}
                                                     className="bg-red-500 rounded text-white px-4 py-2 hover:bg-red-600"
                                                 >
-                                                    Eliminar
+                                                  <img className="h-4 w-4" src="/delete.svg" alt="eliminar" />
                                                 </button>
                                             </td>
                                         </tr>

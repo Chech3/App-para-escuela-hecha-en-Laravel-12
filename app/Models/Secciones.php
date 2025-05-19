@@ -29,6 +29,6 @@ class Secciones extends Model
 
     public function estudiantes()
     {
-        return $this->hasMany(Estudiante::class);
+        return $this->hasMany(Estudiante::class, 'seccion_id');
     }
 }

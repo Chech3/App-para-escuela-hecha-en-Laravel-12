@@ -64,6 +64,11 @@ class SeccionesController extends Controller
      */
     public function destroy(Secciones $seccione)
     {
+        
+        if ($seccione->estudiantes()->exists()) {
+            return redirect()->back()->with('error', 'No se puede eliminar la sección porque tiene estudiantes asignados.');
+        }
+
         $seccione->delete();
 
         return redirect()->back()->with('success', 'seccion eliminada exitosamente.');

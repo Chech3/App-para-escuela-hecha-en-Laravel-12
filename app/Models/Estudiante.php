@@ -15,6 +15,7 @@ class Estudiante extends Model
         'apellido',
         'fecha_nacimiento',
         'genero',
+        'cedula',
         'grado_id',
         'seccion_id',
     ];

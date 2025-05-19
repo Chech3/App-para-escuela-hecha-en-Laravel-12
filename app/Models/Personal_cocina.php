@@ -8,5 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Personal_cocina extends Model
 {
     use HasFactory;
-    protected $table = 'personal_cocina'; 
+    protected $table = 'personal_cocinas'; 
+
+
+    protected $fillable = [
+        'nombre',
+        'apellido',
+    ];
 }

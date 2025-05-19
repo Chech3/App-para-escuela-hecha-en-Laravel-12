@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('apellido');
             $table->date('fecha_nacimiento');
             $table->string('genero');
+            $table->integer('cedula')->nullable();
             $table->unsignedBigInteger('grado_id');
             $table->unsignedBigInteger('seccion_id');
             $table->timestamps();

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AsistenciaController;
+use App\Http\Controllers\ConstanciaController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\GradoController;
@@ -40,6 +42,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('docente', DocenteController::class)->names(['profesores']);
     Route::resource('horarios', HorarioController::class)->names(['horarios']);
     // Route::post('estudiantes',  [EstudianteController::class, 'store'])->name('estudiantes');
+
+    Route::get('/constancia/{id}', [ConstanciaController::class, 'generarConstancia'])->name('constancia');
+    Route::get('/constancia-estudio/{id}', [ConstanciaController::class, 'generarConstanciaEstudio'])
+     ->name('constancia.estudio');
+
+
+     Route::get('/asistencias', [AsistenciaController::class, 'index'])->name('asistencias');
+    Route::post('/asistencias', [AsistenciaController::class, 'store']);
+    Route::put('/asistencias/{asistencia}', [AsistenciaController::class, 'update']);
 });
 
 require __DIR__ . '/auth.php';

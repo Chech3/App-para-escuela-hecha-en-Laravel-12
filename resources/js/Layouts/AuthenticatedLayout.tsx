@@ -72,6 +72,13 @@ export default function Authenticated({
                                     Estudiantes
                                 </NavLink>
 
+                                 <NavLink
+                                    href={route('asistencias')}
+                                    active={route().current('asistencias')}
+                                >
+                                    Asistencias
+                                </NavLink>
+
                               
 
 
