@@ -45,12 +45,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/constancia/{id}', [ConstanciaController::class, 'generarConstancia'])->name('constancia');
     Route::get('/constancia-estudio/{id}', [ConstanciaController::class, 'generarConstanciaEstudio'])
-     ->name('constancia.estudio');
+        ->name('constancia.estudio');
 
 
-     Route::get('/asistencias', [AsistenciaController::class, 'index'])->name('asistencias');
+    Route::get('/asistencias', [AsistenciaController::class, 'index'])->name('asistencias');
     Route::post('/asistencias', [AsistenciaController::class, 'store']);
     Route::put('/asistencias/{asistencia}', [AsistenciaController::class, 'update']);
+    // Route::post('/asistencias/masivo', [AsistenciaController::class, 'storeMassive'])
+    //     ->name('asistencias.masivo');
 });
 
 require __DIR__ . '/auth.php';

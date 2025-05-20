@@ -31,12 +31,12 @@ class Asistencia extends Model
 
     public function personalCocina()
     {
-        return $this->belongsTo(User::class, 'personal_id');
+        return $this->belongsTo(Personal_cocina::class, 'personal_id');
     }
 
     public function docente()
     {
-        return $this->belongsTo(User::class, 'docente_id');
+        return $this->belongsTo(Docente::class, 'docente_id');
     }
 
      // Accesor para obtener la persona relacionada
@@ -60,5 +60,6 @@ class Asistencia extends Model
         };
     }
 
+    
 
 }

@@ -28,6 +28,7 @@ interface Props extends PageProps {
     estudiantes: Persona[];
     docentes: Persona[];
     personalCocina: Persona[];
+    secciones: Array<{ id: number; nombre: string }>;
 }
 
 export default function Index({
@@ -44,6 +45,9 @@ export default function Index({
         hora_entrada: new Date().toTimeString().substring(0, 5),
         observaciones: "",
     });
+
+    console.log(asistencias);
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -84,7 +88,10 @@ export default function Index({
             case "estudiante":
                 return `${asistencia.estudiante?.nombre} ${asistencia.estudiante?.apellido} `;
             case "docente":
-                return asistencia.docente?.nombre;
+                return `${asistencia.docente?.nombre ?? ""} ${
+                    asistencia.docente?.apellido ?? ""
+                }`;
+
             case "personal_cocina":
                 return asistencia.personalCocina?.nombre;
             default:
@@ -93,11 +100,13 @@ export default function Index({
     };
 
     return (
-        <AuthenticatedLayout header={
+        <AuthenticatedLayout
+            header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     Asistencias
                 </h2>
-            }>
+            }
+        >
             <Head title="Registro de Asistencias" />
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -123,6 +132,8 @@ export default function Index({
                                     className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 />
                             </div>
+
+                            {/* <MarcadoMasivo secciones={secciones} /> */}
 
                             {/* Formulario de registro */}
                             <form
@@ -191,7 +202,7 @@ export default function Index({
                                                         ? `${persona.nombre} - ${persona.seccion.nombre}`
                                                         : persona.nombre}
                                                 </option>
-                                            ))} 
+                                            ))}
                                         </select>
                                     </div>
 
@@ -296,7 +307,7 @@ export default function Index({
                                                             className="bg-indigo-400 transition-all hover:text-indigo-600 p-1 rounded-md text-white"
                                                         >
                                                             Registrar salida
-                                                        </button>   
+                                                        </button>
                                                     )}
                                                 </td>
                                                 <td className="px-6 py-4">
