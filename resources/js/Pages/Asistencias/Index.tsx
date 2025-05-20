@@ -7,7 +7,7 @@ interface Persona {
     id: number;
     nombre?: string;
     apellido?: string;
-    seccion?: string;
+    seccion?: { nombre: string } | undefined;
 }
 
 interface Asistencia {
@@ -199,7 +199,7 @@ export default function Index({
                                                     value={persona.id}
                                                 >
                                                     {data.tipo === "estudiante"
-                                                        ? `${persona.nombre} - ${persona.seccion.nombre}`
+                                                        ? `${persona.nombre} - ${persona.seccion?.nombre ?? ""}`
                                                         : persona.nombre}
                                                 </option>
                                             ))}
