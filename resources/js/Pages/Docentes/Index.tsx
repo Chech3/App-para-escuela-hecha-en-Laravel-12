@@ -4,6 +4,7 @@ import { useState } from "react";
 import Modal from "@/Components/Modal";
 import TextInput from "@/Components/TextInput";
 import { convertirHoraAMPM } from "../../utils/ConvertirHora";
+import SearchBar from "../../Components/SearchBar";
 export interface Docente {
     id: number;
     nombre: string;
@@ -15,6 +16,9 @@ export interface Docente {
 
 export default function Index() {
     const { docentes, horarios } = usePage<any>().props;
+
+    const docentesArray = docentes ?? [];
+
     const [showModalE, setShowModalE] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
@@ -28,21 +32,21 @@ export default function Index() {
     });
 
     const eliminar = (id: number) => {
-        router.delete(route(`docente.destroy`, { id })),
-            {
-                onSuccess: () => {
-                    setShowModalE(false);
-                    setIdM(null);
-                },
-            };
+        router.delete(route(`docente.destroy`, { id }), {
+            onSuccess: () => {
+                setShowModalE(false);
+                setIdM(null);
+            },
+        });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
+        setIsSubmitting(true);
         router.post("/docente", form, {
             onSuccess: () => {
                 setShowModal(false);
+                 setIsSubmitting(false);
                 setForm({
                     nombre: "",
                     apellido: "",
@@ -71,12 +75,25 @@ export default function Index() {
                             <h1 className="text-2xl font-bold">
                                 Listado de Docentes
                             </h1>
-                            <button
-                                onClick={() => setShowModal(true)}
-                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                            >
-                                Agregar Docente
-                            </button>
+
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => setShowModal(true)}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                >
+                                    Agregar Docente
+                                </button>
+
+                                <SearchBar
+                                    routeName="docente.index"
+                                    placeholder="Buscar docente..."
+                                    initialValue={
+                                        new URLSearchParams(
+                                            window.location.search
+                                        ).get("search") || ""
+                                    }
+                                />
+                            </div>
                         </div>
 
                         <div className="overflow-x-auto">
@@ -104,7 +121,7 @@ export default function Index() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {docentes.map((e: Docente) => (
+                                    {docentesArray.map((e: Docente) => (
                                         <tr key={e.id}>
                                             <td className="px-4 py-2">
                                                 {e.nombre}
@@ -137,12 +154,27 @@ export default function Index() {
                                                     }}
                                                     className="bg-red-500 rounded text-white px-4 py-2 hover:bg-red-600"
                                                 >
-                                                  <img className="h-4 w-4" src="/delete.svg" alt="eliminar" />
+                                                    <img
+                                                        className="h-4 w-4"
+                                                        src="/delete.svg"
+                                                        alt="eliminar"
+                                                    />
                                                 </button>
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
+                                {docentesArray.length === 0 && (
+                                    <tbody className="text-center py-10">
+                                        <tr>
+                                            <td colSpan={6} className="py-10">
+                                                <p className="text-2xl text-black text-center">
+                                                    No hay Docentes registrados
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                )}
                             </table>
                         </div>
                     </div>
@@ -276,8 +308,9 @@ export default function Index() {
                                 Cancelar
                             </button>
                             <button
+                                disabled={isSubmitting}
                                 type="submit"
-                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-75 disabled:cursor-not-allowed"
                             >
                                 Guardar
                             </button>
@@ -328,6 +361,7 @@ export default function Index() {
                     </div>
                 </div>
             </Modal>
+            
         </AuthenticatedLayout>
     );
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import TextInput from "@/Components/TextInput";
 import Modal from "@/Components/Modal";
+import SearchBar from "@/Components/SearchBar";
 
 interface Grado {
     id: number;
@@ -12,10 +13,9 @@ interface Grado {
 
 interface Props {
     grados: Grado[];
-    fibonacci: number;
 }
 
-export default function Index({ grados, fibonacci }: Props) {
+export default function Index({ grados }: Props) {
     const [showModal, setShowModal] = useState(false);
     const [showModalE, setShowModalE] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
@@ -23,18 +23,17 @@ export default function Index({ grados, fibonacci }: Props) {
 
     const [form, setForm] = useState({
         nombre: "",
-        codigo: fibonacci,
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
+        setIsSubmitting(true);
         router.post("/grados", form, {
             onSuccess: () => {
                 setShowModal(false);
+                setIsSubmitting(false);
                 setForm({
                     nombre: "",
-                    codigo: fibonacci,
                 });
             },
         });
@@ -49,10 +48,6 @@ export default function Index({ grados, fibonacci }: Props) {
                 },
             };
     };
-
-    useEffect(() => {
-        setForm({ ...form, codigo: fibonacci });
-    }, []);
 
     return (
         <AuthenticatedLayout
@@ -71,12 +66,24 @@ export default function Index({ grados, fibonacci }: Props) {
                             <h1 className="text-2xl font-bold">
                                 Listado de Grados
                             </h1>
-                            <button
-                                onClick={() => setShowModal(true)}
-                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                            >
-                                Agregar Grado
-                            </button>
+
+                            <div className="flex items-center space-x-4">
+                                <button
+                                    onClick={() => setShowModal(true)}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                >
+                                    Agregar Grado
+                                </button>
+                                <SearchBar
+                                    routeName="grados.index"
+                                    placeholder="Buscar grado..."
+                                    initialValue={
+                                        new URLSearchParams(
+                                            window.location.search
+                                        ).get("search") || ""
+                                    }
+                                />
+                            </div>
                         </div>
 
                         <div className="overflow-x-auto">
@@ -88,9 +95,6 @@ export default function Index({ grados, fibonacci }: Props) {
                                         </th>
                                         <th className="px-4 py-2 text-left">
                                             Nombre
-                                        </th>
-                                        <th className="px-4 py-2 text-left">
-                                            Codigo
                                         </th>
                                         <th>Acciones</th>
                                     </tr>
@@ -104,10 +108,8 @@ export default function Index({ grados, fibonacci }: Props) {
                                             <td className="px-4 py-2">
                                                 {e.nombre}
                                             </td>
-                                            <td className="px-4 py-2">
-                                                {e.codigo}
-                                            </td>
-                                            <td className="px-4 py-2">
+
+                                            <td className="px-4 py-2 flex justify-center">
                                                 <button
                                                     onClick={() => {
                                                         setShowModalE(true),
@@ -115,7 +117,11 @@ export default function Index({ grados, fibonacci }: Props) {
                                                     }}
                                                     className="bg-red-500 rounded text-white px-4 py-2 hover:bg-red-600"
                                                 >
-                                                   <img className="h-4 w-4" src="/delete.svg" alt="eliminar" />
+                                                    <img
+                                                        className="h-4 w-4"
+                                                        src="/delete.svg"
+                                                        alt="eliminar"
+                                                    />
                                                 </button>
                                             </td>
                                         </tr>
@@ -151,20 +157,6 @@ export default function Index({ grados, fibonacci }: Props) {
                                             required
                                         />
                                     </div>
-                                    <div>
-                                        <label className="py-2 px-2">
-                                            Codigo del Grado
-                                        </label>
-                                        <TextInput
-                                            name="codigo"
-                                            id="codigo"
-                                            type="number"
-                                            className="border rounded px-4 py-2 w-full mb-2"
-                                            placeholder="codigo del grado"
-                                            value={form.codigo}
-                                            disabled
-                                        />
-                                    </div>
 
                                     <div className="flex justify-end gap-2 pt-4">
                                         <button
@@ -175,8 +167,9 @@ export default function Index({ grados, fibonacci }: Props) {
                                             Cancelar
                                         </button>
                                         <button
+                                        disabled={isSubmitting}
                                             type="submit"
-                                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-75 disabled:cursor-not-allowed"
                                         >
                                             Guardar
                                         </button>

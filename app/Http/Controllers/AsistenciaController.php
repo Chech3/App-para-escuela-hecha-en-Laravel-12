@@ -18,34 +18,22 @@ class AsistenciaController extends Controller
     public function index(Request $request)
     {
         $fecha = $request->input('fecha', now()->format('Y-m-d'));
-        $estudiantes = Estudiante::with('seccion')->get();
 
         return Inertia::render('Asistencias/Index', [
-            'asistencias' => Asistencia::with(['estudiante', 'docente', 'personalCocina'])
+            'asistencias' => Asistencia::with(['docente', 'personalCocina'])
                 ->whereDate('fecha', $fecha)
                 ->orderBy('hora_entrada')
                 ->get(),
             'fechaActual' => $fecha,
-            'estudiantes' => $estudiantes,
             'docentes' => Docente::get(['id', 'nombre']),
             'personalCocina' => Personal_cocina::get(['id', 'nombre']),
-            'secciones' => Secciones::withCount([
-                'estudiantes' => function ($query) {
-                    $query->where('activo', true);
-                }
-            ])->get()->map(function ($seccion) {
-                return [
-                    'id' => $seccion->id,
-                    'nombre' => $seccion->nombre . ' (' . $seccion->estudiantes_count . ' estudiantes)'
-                ];
-            }),
         ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'tipo' => 'required|in:estudiante,docente,personal_cocina',
+            'tipo' => 'required|in:docente,personal_cocina',
             'persona_id' => 'required|integer',
             'fecha' => 'required|date',
             'hora_entrada' => 'required|date_format:H:i',
@@ -60,22 +48,18 @@ class AsistenciaController extends Controller
             'observaciones' => $request->observaciones,
         ];
 
-        switch ($request->tipo) {
-            case 'estudiante':
-                $data['estudiante_id'] = $request->persona_id;
-                break;
-            case 'docente':
-                $data['docente_id'] = $request->persona_id;
-                break;
-            case 'personal_cocina':
-                $data['personal_cocina_id'] = $request->persona_id;
-                break;
+        // Asignar el ID correcto según el tipo
+        if ($request->tipo === 'docente') {
+            $data['docente_id'] = $request->persona_id;
+        } elseif ($request->tipo === 'personal_cocina') {
+            $data['personal_cocina_id'] = $request->persona_id;
         }
 
         Asistencia::create($data);
 
         return redirect()->back()->with('success', 'Asistencia registrada correctamente');
     }
+
 
     public function update(Request $request, Asistencia $asistencia)
     {

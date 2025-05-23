@@ -11,18 +11,36 @@ class HorarioController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $horario = Horario::all();
+      
+        $search = $request->input('search', '');
 
+        // Consulta 
+        $query = Horario::query()->orderBy('created_at', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('dia', 'like', "%{$search}%");
+            });
+        }
+
+        $horarios = $query->get()->map(function ($horario) {
+            return [
+                'id' => $horario->id,
+                'dia' => $horario->dia,
+                'hora_inicio' => $horario->hora_inicio,
+                'hora_fin' => $horario->hora_fin,
+            ];
+        });
+
+        // Retornar la vista con los datos
         return Inertia::render('Horarios/Index', [
-            'horarios' => $horario,
+            'horarios' => $horarios,
+            'filters' => $request->only('search'),
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //

@@ -8,16 +8,31 @@ use Inertia\Inertia;
 
 class GradoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $grados = Grado::all();
-        $fibonacci = $this->generateFibonacciCode(10);
+
+        $search = $request->input('search', '');
+
+        // Consulta 
+        $query = Grado::query()->orderBy('created_at', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nombre', 'like', "%{$search}%");
+            });
+        }
+
+        $grados = $query->get()->map(function ($grado) {
+            return [
+                'id' => $grado->id,
+                'nombre' => $grado->nombre,
+            ];
+        });
+
+        // Retornar la vista con los datos
         return Inertia::render('Grados/Index', [
             'grados' => $grados,
-            'fibonacci' => $fibonacci,
+            'filters' => $request->only('search'),
         ]);
     }
 
@@ -29,9 +44,6 @@ class GradoController extends Controller
         return redirect()->back()->with('success', 'Grado creado exitosamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Grado $grado)
     {
         //
@@ -63,23 +75,5 @@ class GradoController extends Controller
         return redirect()->back()->with('success', 'Grado eliminado exitosamente.');
     }
 
-    private function generateFibonacciCode($n)
-    {
-        $sequence = [0, 1];
 
-        for ($i = 2; $i < $n; $i++) {
-            $sequence[] = $sequence[$i - 1] + $sequence[$i - 2];
-        }
-
-        // Mezclamos los números
-        shuffle($sequence);
-
-        // Tomamos los primeros 5 números (puedes cambiar esto)
-        $selected = array_slice($sequence, 0, 5);
-
-        // Los unimos como un string (puedes agregar separadores si quieres)
-        $code = implode('', $selected);
-
-        return $code;
-    }
 }

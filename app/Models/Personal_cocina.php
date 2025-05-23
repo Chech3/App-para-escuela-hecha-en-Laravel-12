@@ -12,6 +12,7 @@ class Personal_cocina extends Model
 
 
     protected $fillable = [
+        'id',
         'nombre',
         'apellido',
     ];

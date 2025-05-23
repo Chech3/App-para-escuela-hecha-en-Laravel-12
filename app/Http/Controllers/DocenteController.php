@@ -10,14 +10,37 @@ use Inertia\Inertia;
 class DocenteController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $docentes = Docente::with('horario')->get();
+
+        $search = $request->input('search', '');
 
         $horarios = Horario::all();
-        // $docentes = Docente::all();
+        // Consulta 
+        $query = Docente::query()->orderBy('created_at', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nombre', 'like', "%{$search}%")
+                    ->orWhere('apellido', 'like', "%{$search}%");
+            });
+        }
+
+        $docentes = $query->get()->map(function ($docente) {
+            return [
+                'id' => $docente->id,
+                'nombre' => $docente->nombre,
+                'apellido' => $docente->apellido,
+                'correo' => $docente->correo,
+                'horario' => $docente->horario,
+                'especialidad' => $docente->especialidad,
+            ];
+        });
+
+        // Retornar la vista con los datos
         return Inertia::render('Docentes/Index', [
             'docentes' => $docentes,
+            'filters' => $request->only('search'),
             'horarios' => $horarios,
         ]);
     }
@@ -32,12 +55,8 @@ class DocenteController extends Controller
         ]);
 
         Docente::create($request->all());
-        
-        return redirect()->route('docente.index')
-            ->with('flash', [
-                'message' => 'Docente registrado con éxito.',
-                'success' => true
-            ]);
+
+        return redirect()->route('docente.index')->with('success', 'Docente creado correctamente');
     }
 
     /**

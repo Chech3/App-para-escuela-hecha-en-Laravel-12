@@ -13,7 +13,7 @@ export default function Authenticated({
     const user = usePage().props.auth?.user;
 
     if (!user) {
-    return <div className="text-center p-4">Cargando...</div>; // Puedes usar un loader también
+    return <div className="text-center p-4">Cargando...</div>; 
 }
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -72,15 +72,21 @@ export default function Authenticated({
                                     Estudiantes
                                 </NavLink>
 
+
+                                <NavLink
+                                    href={route('personalCocina.index')}
+                                    active={route().current('personalCocina.*')}
+                                >
+                                    Personal de Cocina
+                                </NavLink>
+
+
                                  <NavLink
                                     href={route('asistencias')}
                                     active={route().current('asistencias')}
                                 >
                                     Asistencias
                                 </NavLink>
-
-                              
-
 
                             </div>
                         </div>

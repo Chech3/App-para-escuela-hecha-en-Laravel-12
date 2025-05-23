@@ -15,7 +15,7 @@ interface Asistencia {
     fecha: string;
     hora_entrada: string;
     hora_salida: string | null;
-    tipo: "estudiante" | "docente" | "personal_cocina";
+    tipo: "docente" | "personal_cocina";
     estudiante?: Persona;
     docente?: Persona;
     personalCocina?: Persona;
@@ -25,7 +25,6 @@ interface Asistencia {
 interface Props extends PageProps {
     asistencias: Asistencia[];
     fechaActual: string;
-    estudiantes: Persona[];
     docentes: Persona[];
     personalCocina: Persona[];
     secciones: Array<{ id: number; nombre: string }>;
@@ -34,20 +33,16 @@ interface Props extends PageProps {
 export default function Index({
     asistencias,
     fechaActual,
-    estudiantes,
     docentes,
     personalCocina,
 }: Props) {
     const { data, setData, post, processing, errors } = useForm({
-        tipo: "estudiante" as "estudiante" | "docente" | "personal_cocina",
+        tipo: "docente" as "docente" | "personal_cocina",
         persona_id: "",
         fecha: fechaActual,
         hora_entrada: new Date().toTimeString().substring(0, 5),
         observaciones: "",
     });
-
-    console.log(asistencias);
-
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -72,8 +67,6 @@ export default function Index({
 
     const getPersonas = () => {
         switch (data.tipo) {
-            case "estudiante":
-                return estudiantes;
             case "docente":
                 return docentes;
             case "personal_cocina":
@@ -85,8 +78,6 @@ export default function Index({
 
     const getNombrePersona = (asistencia: Asistencia) => {
         switch (asistencia.tipo) {
-            case "estudiante":
-                return `${asistencia.estudiante?.nombre} ${asistencia.estudiante?.apellido} `;
             case "docente":
                 return `${asistencia.docente?.nombre ?? ""} ${
                     asistencia.docente?.apellido ?? ""
@@ -98,6 +89,10 @@ export default function Index({
                 return "Desconocido";
         }
     };
+
+    const asistenciasFiltradas = asistencias.filter(
+        (a) => a.tipo === "docente" || a.tipo === "personal_cocina"
+    );
 
     return (
         <AuthenticatedLayout
@@ -151,7 +146,6 @@ export default function Index({
                                                 setData(
                                                     "tipo",
                                                     e.target.value as
-                                                        | "estudiante"
                                                         | "docente"
                                                         | "personal_cocina"
                                                 );
@@ -159,9 +153,6 @@ export default function Index({
                                             }}
                                             className="w-full border-gray-300 rounded-md shadow-sm"
                                         >
-                                            <option value="estudiante">
-                                                Estudiante
-                                            </option>
                                             <option value="docente">
                                                 Docente
                                             </option>
@@ -173,9 +164,7 @@ export default function Index({
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            {data.tipo === "estudiante"
-                                                ? "Estudiante"
-                                                : data.tipo === "docente"
+                                            {data.tipo === "docente"
                                                 ? "Docente"
                                                 : "Personal Cocina"}
                                         </label>
@@ -198,8 +187,8 @@ export default function Index({
                                                     key={persona.id}
                                                     value={persona.id}
                                                 >
-                                                    {data.tipo === "estudiante"
-                                                        ? `${persona.nombre} - ${persona.seccion?.nombre ?? ""}`
+                                                    {data.tipo === "docente"
+                                                        ? `${persona.nombre} ${persona.apellido}`
                                                         : persona.nombre}
                                                 </option>
                                             ))}
@@ -280,46 +269,56 @@ export default function Index({
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {asistencias.map((asistencia) => (
-                                            <tr key={asistencia.id}>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    {getNombrePersona(
-                                                        asistencia
-                                                    )}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap capitalize">
-                                                    {asistencia.tipo.replace(
-                                                        "_",
-                                                        " "
-                                                    )}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    {asistencia.hora_entrada}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    {asistencia.hora_salida || (
-                                                        <button
-                                                            onClick={() =>
-                                                                registrarSalida(
-                                                                    asistencia.id
-                                                                )
-                                                            }
-                                                            className="bg-indigo-400 transition-all hover:text-indigo-600 p-1 rounded-md text-white"
-                                                        >
-                                                            Registrar salida
+                                        {asistenciasFiltradas.map(
+                                            (asistencia) => (
+                                                <tr key={asistencia.id}>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        {getNombrePersona(
+                                                            asistencia
+                                                        )}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap capitalize">
+                                                        {asistencia.tipo.replace(
+                                                            "_",
+                                                            " "
+                                                        )}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        {
+                                                            asistencia.hora_entrada
+                                                        }
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        {asistencia.hora_salida || (
+                                                            <button
+                                                                onClick={() =>
+                                                                    registrarSalida(
+                                                                        asistencia.id
+                                                                    )
+                                                                }
+                                                                className="bg-indigo-400 transition-all hover:text-indigo-600 p-1 rounded-md text-white"
+                                                            >
+                                                                Registrar salida
+                                                            </button>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        {
+                                                            asistencia.observaciones
+                                                        }
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                        <button className="bg-red-500 hover:bg-red-600 transition-all py-2 px-2 rounded-md">
+                                                            <img
+                                                                className="h-4 w-4"
+                                                                src="/delete.svg"
+                                                                alt="eliminar"
+                                                            />
                                                         </button>
-                                                    )}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {asistencia.observaciones}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <button className="text-red-600 hover:text-red-900">
-                                                        Eliminar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                    </td>
+                                                </tr>
+                                            )
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

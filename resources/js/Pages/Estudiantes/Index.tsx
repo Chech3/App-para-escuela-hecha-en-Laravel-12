@@ -3,6 +3,7 @@ import { Head, usePage, router } from "@inertiajs/react";
 import { useState } from "react";
 import Modal from "@/Components/Modal";
 import { User } from "@/types/inertia";
+import SearchBar from "@/Components/SearchBar";
 
 export interface Estudiante {
     id: number;
@@ -54,11 +55,12 @@ export default function Index() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
+        setIsSubmitting(true);
         router.post("/estudiantes", form, {
             onSuccess: () => {
                 setShowModal(false);
                 setShowModalE(false);
+                setIsSubmitting(false);
                 setForm({
                     nombre: "",
                     apellido: "",
@@ -98,12 +100,25 @@ export default function Index() {
                             <h1 className="text-2xl font-bold">
                                 Listado de Estudiantes
                             </h1>
-                            <button
-                                onClick={() => setShowModal(true)}
-                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                            >
-                                Agregar Estudiante
-                            </button>
+
+                            <div className="flex space-x-2">
+                                <button
+                                    onClick={() => setShowModal(true)}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                >
+                                    Agregar Estudiante
+                                </button>
+
+                                <SearchBar
+                                    routeName="estudiantes.index"
+                                    placeholder="Buscar estudiante..."
+                                    initialValue={
+                                        new URLSearchParams(
+                                            window.location.search
+                                        ).get("search") || ""
+                                    }
+                                />
+                            </div>
                         </div>
 
                         <div className="overflow-x-auto">
@@ -120,7 +135,7 @@ export default function Index() {
                                             Género
                                         </th>
                                         <th className="px-4 py-2 text-left">
-                                            Cedula
+                                            Cedula Escolar
                                         </th>
                                         <th className="px-4 py-2 text-left">
                                             Grado
@@ -162,7 +177,11 @@ export default function Index() {
                                                     }}
                                                     className="bg-red-500 rounded px-2 py-2 hover:bg-red-600"
                                                 >
-                                                    <img className="h-4 w-4" src="/delete.svg" alt="eliminar" />
+                                                    <img
+                                                        className="h-4 w-4"
+                                                        src="/delete.svg"
+                                                        alt="eliminar"
+                                                    />
                                                 </button>
 
                                                 <a
@@ -171,16 +190,24 @@ export default function Index() {
                                                     href={`/constancia/${e.id}`}
                                                     className="bg-blue-500 rounded px-2 py-2 hover:bg-blue-600"
                                                 >
-                                                    <img className="h-4 w-4" src="/print.svg" alt="Imprimit" />
+                                                    <img
+                                                        className="h-4 w-4"
+                                                        src="/print.svg"
+                                                        alt="Imprimit"
+                                                    />
                                                 </a>
 
-                                                 <a
+                                                <a
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     href={`/constancia-estudio/${e.id}`}
                                                     className="bg-green-500 rounded px-2 py-2 hover:bg-green-600"
                                                 >
-                                                    <img className="h-4 w-4" src="/print.svg" alt="Imprimit" />
+                                                    <img
+                                                        className="h-4 w-4"
+                                                        src="/print.svg"
+                                                        alt="Imprimit"
+                                                    />
                                                 </a>
                                             </td>
                                         </tr>
@@ -321,7 +348,7 @@ export default function Index() {
                             </div>
 
                             <div>
-                                <label htmlFor="">Cedula</label>
+                                <label htmlFor="">Cedula Escolar</label>
                                 <input
                                     type="number"
                                     className="w-full border rounded px-3 py-2"
@@ -347,7 +374,8 @@ export default function Index() {
                             </button>
                             <button
                                 type="submit"
-                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                disabled={isSubmitting}
+                                className="px-4 py-2 disabled:opacity-75 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:cursor-not-allowed"
                             >
                                 Guardar
                             </button>

@@ -1,85 +1,83 @@
-import { Head, router } from "@inertiajs/react";
-import { useState } from "react";
+import { Head, router, usePage } from "@inertiajs/react";
+import { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import TextInput from "@/Components/TextInput";
 import Modal from "@/Components/Modal";
-import { convertirHoraAMPM } from "../../utils/ConvertirHora";
 import SearchBar from "@/Components/SearchBar";
-interface Horario {
+
+interface PersonalCocina {
     id: number;
-    dia: string;
-    hora_inicio: string;
-    hora_fin: string;
+    nombre: string;
+    apellido: number;
 }
 
 interface Props {
-    horarios: Horario[];
+    personal: PersonalCocina[];
 }
 
-export default function Index({ horarios }: Props) {
-    const [dia, setDia] = useState("");
-    const [horaInicio, setHoraInicio] = useState("");
-    const [horaFin, setHoraFin] = useState("");
+export default function Index({ personal }: Props) {
     const [showModal, setShowModal] = useState(false);
     const [showModalE, setShowModalE] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const eliminar = (id: number) => {
-        router.delete(route("horarios.destroy", { id }), {
+    const [form, setForm] = useState({
+        nombre: "", apellido: "",
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+            setIsSubmitting(true);
+        router.post("/personalCocina", form, {
             onSuccess: () => {
-                setShowModalE(false);
-                setIdM(null);
+                setShowModal(false);
+                setIsSubmitting(false);
+                setForm({
+                    nombre: "",
+                    apellido: "",
+                });
             },
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        router.post(
-            route("horarios.store"),
-            { dia, hora_inicio: horaInicio, hora_fin: horaFin },
+    const eliminar = (id: number) => {
+        router.delete(route(`personalCocina.destroy`, { id })),
             {
                 onSuccess: () => {
-                    setDia("");
-                    setHoraInicio("");
-                    setHoraFin("");
-                    setShowModal(false);
-                    setIsSubmitting(false);
+                    setShowModalE(false);
+                    setIdM(null);
                 },
-            }
-        );
+            };
     };
 
     return (
         <AuthenticatedLayout
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Horarios
+                    Personal
                 </h2>
             }
         >
-            <Head title="Horarios" />
+            <Head title="Personal" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-2xl font-bold">
-                                Listado de Horarios
+                                Listado de Personal de Cocina
                             </h1>
+
                             <div className="flex items-center space-x-4">
                                 <button
                                     onClick={() => setShowModal(true)}
                                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                                 >
-                                    Agregar Horario
+                                    Agregar Personal
                                 </button>
-
                                 <SearchBar
-                                    routeName="horarios.index"
-                                    placeholder="Buscar horario..."
+                                    routeName="personalCocina.index"
+                                    placeholder="Buscar personal..."
                                     initialValue={
                                         new URLSearchParams(
                                             window.location.search
@@ -97,41 +95,33 @@ export default function Index({ horarios }: Props) {
                                             ID
                                         </th>
                                         <th className="px-4 py-2 text-left">
-                                            Día
+                                            Nombre
                                         </th>
-                                        <th className="px-4 py-2 text-left">
-                                            Hora Inicio
+                                         <th className="px-4 py-2 text-left">
+                                            Apellido
                                         </th>
-                                        <th className="px-4 py-2 text-left">
-                                            Hora Fin
-                                        </th>
-                                        <th className="px-4 py-2 text-left">
-                                            Acciones
-                                        </th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {horarios.map((e) => (
+                                    {personal.map((e: PersonalCocina) => (
                                         <tr key={e.id}>
                                             <td className="px-4 py-2">
                                                 {e.id}
                                             </td>
                                             <td className="px-4 py-2">
-                                                {e.dia}
+                                                {e.nombre}
                                             </td>
-                                            <td className="px-4 py-2">
-                                                {convertirHoraAMPM(
-                                                    e.hora_inicio
-                                                )}
+
+                                             <td className="px-4 py-2">
+                                                {e.apellido}
                                             </td>
-                                            <td className="px-4 py-2">
-                                                {convertirHoraAMPM(e.hora_fin)}
-                                            </td>
-                                            <td className="px-4 py-2">
+
+                                            <td className="px-4 py-2 flex justify-center">
                                                 <button
                                                     onClick={() => {
-                                                        setShowModalE(true);
-                                                        setIdM(e.id);
+                                                        setShowModalE(true),
+                                                            setIdM(e.id);
                                                     }}
                                                     className="bg-red-500 rounded text-white px-4 py-2 hover:bg-red-600"
                                                 >
@@ -148,7 +138,6 @@ export default function Index({ horarios }: Props) {
                             </table>
                         </div>
 
-                        {/* Modal para crear horario */}
                         <Modal
                             show={showModal}
                             onClose={() => setShowModal(false)}
@@ -157,39 +146,42 @@ export default function Index({ horarios }: Props) {
                             <form onSubmit={handleSubmit} className="mb-6">
                                 <div className="flex flex-col p-6">
                                     <div>
-                                        <label htmlFor="">Dias</label>
+                                        <label className="py-2 px-2">
+                                            Nombre de la persona
+                                        </label>
                                         <TextInput
                                             type="text"
+                                            name="nombre"
+                                            id="nombre"
                                             className="border rounded px-4 py-2 w-full mb-2"
-                                            placeholder="Días (ej: Lunes a Viernes)"
-                                            value={dia}
+                                            placeholder="Nombre del grado"
+                                            value={form.nombre}
                                             onChange={(e) =>
-                                                setDia(e.target.value)
+                                                setForm({
+                                                    ...form,
+                                                    nombre: e.target.value,
+                                                })
                                             }
                                             required
                                         />
                                     </div>
 
                                     <div>
-                                        <label htmlFor="">Hora inicio</label>
+                                        <label className="py-2 px-2">
+                                            Apellido de la persona
+                                        </label>
                                         <TextInput
-                                            type="time"
+                                            type="text"
+                                            name="apellido"
+                                            id="apellido"
                                             className="border rounded px-4 py-2 w-full mb-2"
-                                            value={horaInicio}
+                                            placeholder="Apellido"
+                                            value={form.apellido}
                                             onChange={(e) =>
-                                                setHoraInicio(e.target.value)
-                                            }
-                                            required
-                                        />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="">Hora Final</label>
-                                        <TextInput
-                                            type="time"
-                                            className="border rounded px-4 py-2 w-full mb-2"
-                                            value={horaFin}
-                                            onChange={(e) =>
-                                                setHoraFin(e.target.value)
+                                                setForm({
+                                                    ...form,
+                                                    apellido: e.target.value,
+                                                })
                                             }
                                             required
                                         />
@@ -204,9 +196,9 @@ export default function Index({ horarios }: Props) {
                                             Cancelar
                                         </button>
                                         <button
-                                            type="submit"
                                             disabled={isSubmitting}
-                                            className="px-4 py-2 disabled:opacity-75 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:cursor-not-allowed"
+                                            type="submit"
+                                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-75 disabled:cursor-not-allowed"
                                         >
                                             Guardar
                                         </button>
@@ -215,7 +207,6 @@ export default function Index({ horarios }: Props) {
                             </form>
                         </Modal>
 
-                        {/* Modal para eliminar horario */}
                         <Modal
                             show={showModalE}
                             onClose={() => setShowModalE(false)}
@@ -223,8 +214,8 @@ export default function Index({ horarios }: Props) {
                         >
                             <div className="p-6">
                                 <p>
-                                    ¿Estas seguro que deseas eliminar este
-                                    horario? Esta acción no se puede deshacer.
+                                    Estas seguro que deseas eliminar este personal?
+                                    Esta acción no se puede deshacer.
                                 </p>
                                 <div className="flex justify-end gap-2 pt-4">
                                     <button
@@ -236,12 +227,14 @@ export default function Index({ horarios }: Props) {
                                     </button>
                                     <button
                                         onClick={() => {
-                                            setIsSubmitting(true);
-                                            eliminar(idM!);
-                                            setTimeout(() => {
-                                                setShowModalE(false);
-                                                setIsSubmitting(false);
-                                            }, 900);
+                                            if (!isSubmitting) {
+                                                setIsSubmitting(true);
+                                                eliminar(idM!);
+                                                setTimeout(() => {
+                                                    setShowModalE(false);
+                                                    setIsSubmitting(false);
+                                                }, 900);
+                                            }
                                         }}
                                         type="submit"
                                         className={`px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 ${

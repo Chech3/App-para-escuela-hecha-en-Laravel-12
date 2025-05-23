@@ -10,17 +10,48 @@ use Inertia\Inertia;
 
 class SeccionesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return Inertia::render('Secciones/Index', [
-            'secciones' => Secciones::with(['grado', 'docente'])->get(),
-            'grados' => Grado::all(),
-            'docentes' => Docente::all(),
-        ]);
+
+//  public function index()
+//     {
+//         return Inertia::render('Secciones/Index', [
+//             'secciones' => Secciones::with(['grado', 'docente'])->get(),
+//             'grados' => Grado::all(),
+//             'docentes' => Docente::all(),
+//         ]);
+//     }
+  public function index(Request $request)
+{
+    $search = $request->input('search', '');
+
+    $grados = Grado::all();
+    $docentes = Docente::all();
+
+    // Armar la consulta correctamente antes de usar get()
+    $query = Secciones::query()
+        ->with(['grado', 'docente'])
+        ->orderBy('created_at', 'desc');
+
+    if ($search) {
+        $query->where('nombre', 'like', "%{$search}%");
     }
+
+    // Ejecutar la consulta
+    $secciones = $query->get()->map(function ($seccion) {
+        return [
+            'id' => $seccion->id,
+            'nombre' => $seccion->nombre,
+            'grado' => $seccion->grado ?? 'No asignado',
+            'docente' => $seccion->docente, 
+        ];
+    });
+
+    return Inertia::render('Secciones/Index', [
+        'secciones' => $secciones,
+        'filters' => $request->only('search'),
+        'grados' => $grados,
+        'docentes' => $docentes,
+    ]);
+}
 
     public function store(Request $request)
     {
@@ -29,9 +60,9 @@ class SeccionesController extends Controller
             'grado_id' => 'required|exists:grados,id',
             'docente_id' => 'nullable|exists:docentes,id',
         ]);
-    
+
         Secciones::create($validated);
-    
+
         return redirect()->back()->with('success', 'Sección creada correctamente.');
     }
 
@@ -64,7 +95,7 @@ class SeccionesController extends Controller
      */
     public function destroy(Secciones $seccione)
     {
-        
+
         if ($seccione->estudiantes()->exists()) {
             return redirect()->back()->with('error', 'No se puede eliminar la sección porque tiene estudiantes asignados.');
         }

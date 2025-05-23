@@ -4,15 +4,40 @@ namespace App\Http\Controllers;
 
 use App\Models\Personal_cocina;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PersonalCocinaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+        $search = $request->input('search', '');
+
+        // Consulta 
+        $query = Personal_cocina::query()->orderBy('created_at', 'desc');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nombre', 'like', "%{$search}%");
+            });
+        }
+
+        $personal = $query->get()->map(function ($personal_cocina) {
+            return [
+                'id' => $personal_cocina->id,
+                'nombre' => $personal_cocina->nombre,
+                'apellido' => $personal_cocina->apellido,
+            ];
+        });
+
+        // Retornar la vista con los datos
+        return Inertia::render('PersonalCocina/Index', [
+            'personal' => $personal,
+            'filters' => $request->only('search'),
+        ]);
     }
 
     /**
@@ -26,15 +51,22 @@ class PersonalCocinaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+   public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:10',
+            'apellido' => 'required|string|max:10',
+        ]);
+
+        Personal_cocina::create($validated);
+
+        return redirect()->back()->with('success', 'Personal creado correctamente.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Personal_cocina $personal_cocina)
+    public function show(Personal_cocina $personalCocina)
     {
         //
     }
@@ -42,7 +74,7 @@ class PersonalCocinaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Personal_cocina $personal_cocina)
+    public function edit(Personal_cocina $personalCocina)
     {
         //
     }
@@ -50,7 +82,7 @@ class PersonalCocinaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Personal_cocina $personal_cocina)
+    public function update(Request $request, Personal_cocina $personalCocina)
     {
         //
     }
@@ -58,8 +90,10 @@ class PersonalCocinaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Personal_cocina $personal_cocina)
+    public function destroy(Personal_cocina $personalCocina)
     {
-        //
+        $personalCocina->delete();
+
+        return redirect()->back()->with('success', 'Personal eliminado exitosamente.');
     }
 }

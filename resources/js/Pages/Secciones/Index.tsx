@@ -3,6 +3,7 @@ import { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Modal from "@/Components/Modal";
 import TextInput from "@/Components/TextInput";
+import SearchBar from "@/Components/SearchBar";
 
 interface Seccion {
     id: number;
@@ -57,17 +58,19 @@ export default function Index({ secciones, grados, docentes }: Props) {
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
         if (e.target.name === "nombre" && e.target.value.length > 9) {
-      return;
-    }
+            return;
+        }
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSubmitting(true);
         router.post("/secciones", form, {
             onSuccess: () => {
                 setForm({ nombre: "", grado_id: "", docente_id: "" }),
                     setShowModal(false);
+                     setIsSubmitting(false);
             },
         });
     };
@@ -89,12 +92,24 @@ export default function Index({ secciones, grados, docentes }: Props) {
                             <h1 className="text-2xl font-bold">
                                 Listado de Secciones
                             </h1>
-                            <button
-                                onClick={() => setShowModal(true)}
-                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                            >
-                                Agregar Sección
-                            </button>
+
+                            <div className="flex space-x-2">
+                                <button
+                                    onClick={() => setShowModal(true)}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                >
+                                    Agregar Sección
+                                </button>
+                                <SearchBar
+                                    routeName="secciones.index"
+                                    placeholder="Buscar sección..."
+                                    initialValue={
+                                        new URLSearchParams(
+                                            window.location.search
+                                        ).get("search") || ""
+                                    }
+                                />
+                            </div>
                         </div>
                         <table className="w-full text-left">
                             <thead>
@@ -123,7 +138,11 @@ export default function Index({ secciones, grados, docentes }: Props) {
                                                 }}
                                                 className="bg-red-500 rounded text-white px-4 py-2 hover:bg-red-600"
                                             >
-                                            <img className="h-4 w-4" src="/delete.svg" alt="eliminar" />
+                                                <img
+                                                    className="h-4 w-4"
+                                                    src="/delete.svg"
+                                                    alt="eliminar"
+                                                />
                                             </button>
                                         </td>
                                     </tr>
@@ -206,8 +225,9 @@ export default function Index({ secciones, grados, docentes }: Props) {
                                         Cancelar
                                     </button>
                                     <button
+                                        disabled={isSubmitting}
                                         type="submit"
-                                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-75 disabled:cursor-not-allowed"
                                     >
                                         Guardar sección
                                     </button>

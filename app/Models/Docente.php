@@ -12,6 +12,7 @@ class Docente extends Model
     protected $table = 'docentes';
 
     protected $fillable = [
+        'id',
         'nombre',
         'apellido',
         'correo',
