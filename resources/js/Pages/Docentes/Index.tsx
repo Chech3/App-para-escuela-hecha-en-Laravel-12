@@ -169,7 +169,7 @@ export default function Index() {
                                         <tr>
                                             <td colSpan={6} className="py-10">
                                                 <p className="text-2xl text-black text-center">
-                                                    No hay Docentes registrados
+                                                    No hay registros
                                                 </p>
                                             </td>
                                         </tr>

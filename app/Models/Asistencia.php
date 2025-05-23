@@ -43,7 +43,6 @@ class Asistencia extends Model
     public function getPersonaAttribute()
     {
         return match($this->tipo) {
-            'estudiante' => $this->estudiante,
             'docente' => $this->docente,
             'personal_cocina' => $this->personalCocina,
             default => null,
@@ -54,8 +53,7 @@ class Asistencia extends Model
     public function getNombreAttribute()
     {
         return match($this->tipo) {
-            'estudiante' => $this->estudiante->nombre_completo,
-            'docente', 'personal_cocina' => $this->persona->name,
+            'docente', 'personal_cocina' => $this->persona->nombre,
             default => 'Desconocido',
         };
     }

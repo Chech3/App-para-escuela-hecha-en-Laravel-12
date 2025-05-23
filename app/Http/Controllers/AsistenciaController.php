@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Docente;
-use App\Models\Grado;
 use App\Models\Personal_cocina;
-use App\Models\Secciones;
-use DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\CarbonInterface;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use App\Models\Asistencia;
-use App\Models\Estudiante;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class AsistenciaController extends Controller
 {
@@ -25,8 +23,8 @@ class AsistenciaController extends Controller
                 ->orderBy('hora_entrada')
                 ->get(),
             'fechaActual' => $fecha,
-            'docentes' => Docente::get(['id', 'nombre']),
-            'personalCocina' => Personal_cocina::get(['id', 'nombre']),
+            'docentes' => Docente::get(['id', 'nombre', 'apellido']),
+            'personalCocina' => Personal_cocina::get(['id', 'nombre', 'apellido']),
         ]);
     }
 
@@ -52,7 +50,7 @@ class AsistenciaController extends Controller
         if ($request->tipo === 'docente') {
             $data['docente_id'] = $request->persona_id;
         } elseif ($request->tipo === 'personal_cocina') {
-            $data['personal_cocina_id'] = $request->persona_id;
+            $data['personal_id'] = $request->persona_id;
         }
 
         Asistencia::create($data);
@@ -74,61 +72,32 @@ class AsistenciaController extends Controller
         return redirect()->back()->with('success', 'Salida registrada correctamente');
     }
 
-    // public function storeMassive(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'tipo' => 'required|in:estudiante,docente,personal_cocina',
-    //         'seccion_id' => 'required_if:tipo,estudiante|integer|nullable',
-    //         'fecha' => 'required|date',
-    //         'hora_entrada' => 'required|date_format:H:i',
-    //         'todos_presentes' => 'sometimes|boolean',
-    //     ]);
+ public function generarReporte(Request $request)
+{
+    $tipo = $request->input('tipo', 'semanal'); // 'mensual' o 'semanal'
+    $fecha = $request->input('fecha') ?? now()->toDateString();
+    $fechaCarbon = Carbon::parse($fecha);
 
-    //     // Obtener las personas según el tipo
-    //     $personas = match ($validated['tipo']) {
-    //         'estudiante' => Estudiante::where('seccion_id', $validated['seccion_id'])
-    //             ->where('activo', true)
-    //             ->get(),
-    //         'docente' => Docente::all(),
-    //         'personal_cocina' => Personal_cocina::all(),
-    //         default => collect(),
-    //     };
+    if ($tipo === 'semanal') {
+        $inicio = $fechaCarbon->startOfWeek(CarbonInterface::MONDAY)->toDateString();
+        $fin = $fechaCarbon->endOfWeek(CarbonInterface::SUNDAY)->toDateString();
+    } else {
+        $inicio = $fechaCarbon->copy()->startOfMonth()->toDateString();
+        $fin = $fechaCarbon->copy()->endOfMonth()->toDateString();
+    }
 
-    //     $registrosCreados = 0;
-    //     $horaActual = now()->format('H:i');
+    $asistencias = Asistencia::with(['docente', 'personalCocina'])
+        ->whereBetween('fecha', [$inicio, $fin])
+        ->get();
 
-    //     DB::beginTransaction();
-    //     try {
-    //         foreach ($personas as $persona) {
-    //             // Verificar si ya existe registro para evitar duplicados
-    //             $existe = Asistencia::where('fecha', $validated['fecha'])
-    //                 ->where($validated['tipo'] . '_id', $persona->id)
-    //                 ->exists();
+    $pdf = Pdf::loadView('reportes.asistencias', [
+        'asistencias' => $asistencias,
+        'inicio' => $inicio,
+        'fin' => $fin,
+        'tipo' => $tipo
+    ]);
 
-    //             if (!$existe) {
-    //                 Asistencia::create([
-    //                     'fecha' => $validated['fecha'],
-    //                     'hora_entrada' => $validated['hora_entrada'],
-    //                     'tipo' => $validated['tipo'],
-    //                     $validated['tipo'] . '_id' => $persona->id,
-    //                     'registrador_id' => auth()->id(),
-    //                     'observaciones' => 'Marcado masivo - ' . ($validated['todos_presentes'] ? 'Todos presentes' : ''),
-    //                 ]);
-    //                 $registrosCreados++;
-    //             }
-    //         }
+    return $pdf->stream("reporte_asistencias_{$tipo}.pdf");
+}
 
-    //         DB::commit();
-
-    //         return redirect()
-    //             ->back()
-    //             ->with('success', "Asistencias registradas: $registrosCreados");
-
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         return redirect()
-    //             ->back()
-    //             ->with('error', 'Error al registrar: ' . $e->getMessage());
-    //     }
-    // }
 }

@@ -54,8 +54,8 @@ class PersonalCocinaController extends Controller
    public function store(Request $request)
     {
         $validated = $request->validate([
-            'nombre' => 'required|string|max:10',
-            'apellido' => 'required|string|max:10',
+            'nombre' => 'required|string|max:25',
+            'apellido' => 'required|string|max:25',
         ]);
 
         Personal_cocina::create($validated);

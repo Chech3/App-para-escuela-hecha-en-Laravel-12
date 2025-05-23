@@ -127,6 +127,18 @@ export default function Index({ grados }: Props) {
                                         </tr>
                                     ))}
                                 </tbody>
+
+                                {grados.length === 0 && (
+                                    <tbody>
+                                        <tr className="text-center py-10">
+                                            <td colSpan={3}>
+                                                <p className="text-2xl text-black py-2">
+                                                    No hay registros
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                )}
                             </table>
                         </div>
 
@@ -167,7 +179,7 @@ export default function Index({ grados }: Props) {
                                             Cancelar
                                         </button>
                                         <button
-                                        disabled={isSubmitting}
+                                            disabled={isSubmitting}
                                             type="submit"
                                             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-75 disabled:cursor-not-allowed"
                                         >

@@ -88,6 +88,19 @@ class DocenteController extends Controller
      */
     public function destroy(Docente $docente)
     {
+
+
+         if ($docente->secciones()->exists()) {
+
+            return redirect()->back()->with('error', 'No se puede eliminar el docente porque está asignado a una sección.');
+        }
+
+
+        //   if ($docente->horario()->exists()) {
+
+        //     return redirect()->back()->with('error', 'No se puede eliminar el docente porque está asignado a un horario.');
+        // }
+
         $docente->delete();
 
         return redirect()->route('docente.index')->with('success', 'Docente eliminado con éxito.');

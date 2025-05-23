@@ -213,6 +213,19 @@ export default function Index() {
                                         </tr>
                                     ))}
                                 </tbody>
+
+                                
+                                 {estudiantes.length === 0 && (
+                                    <tbody>
+                                        <tr className="text-center py-10">
+                                            <td colSpan={7}>
+                                                <p className="text-2xl text-black py-2">
+                                                    No hay registros
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                )}
                             </table>
                         </div>
                     </div>

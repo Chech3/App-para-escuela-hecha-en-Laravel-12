@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->enum('tipo', ['estudiante', 'docente', 'personal_cocina'])->default('estudiante');
             $table->foreignId('estudiante_id')->nullable()->constrained();
             $table->foreignId('docente_id')->nullable()->constrained();
-            $table->foreignId('personal_id')->nullable()->constrained('users');
+            $table->foreignId('personal_id')->nullable()->constrained('personal_cocinas');
             $table->string('observaciones')->nullable();
             $table->timestamps();
         });

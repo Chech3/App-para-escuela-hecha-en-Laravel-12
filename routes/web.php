@@ -53,6 +53,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/asistencias', [AsistenciaController::class, 'index'])->name('asistencias');
     Route::post('/asistencias', [AsistenciaController::class, 'store']);
     Route::put('/asistencias/{asistencia}', [AsistenciaController::class, 'update']);
+    Route::get('/reporte-asistencias', [AsistenciaController::class, 'generarReporte']);
+
+
     // Route::post('/asistencias/masivo', [AsistenciaController::class, 'storeMassive'])
     //     ->name('asistencias.masivo');
 });

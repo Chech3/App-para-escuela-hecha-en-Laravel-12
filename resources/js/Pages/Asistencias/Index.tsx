@@ -7,7 +7,6 @@ interface Persona {
     id: number;
     nombre?: string;
     apellido?: string;
-    seccion?: { nombre: string } | undefined;
 }
 
 interface Asistencia {
@@ -16,9 +15,8 @@ interface Asistencia {
     hora_entrada: string;
     hora_salida: string | null;
     tipo: "docente" | "personal_cocina";
-    estudiante?: Persona;
     docente?: Persona;
-    personalCocina?: Persona;
+    personal_cocina?: Persona;
     observaciones: string | null;
 }
 
@@ -84,7 +82,9 @@ export default function Index({
                 }`;
 
             case "personal_cocina":
-                return asistencia.personalCocina?.nombre;
+                return `${asistencia?.personal_cocina?.nombre ?? ""} ${
+                    asistencia?.personal_cocina?.apellido ?? ""
+                }`;
             default:
                 return "Desconocido";
         }
@@ -189,7 +189,7 @@ export default function Index({
                                                 >
                                                     {data.tipo === "docente"
                                                         ? `${persona.nombre} ${persona.apellido}`
-                                                        : persona.nombre}
+                                                        : `${persona.nombre} ${persona.apellido}`}
                                                 </option>
                                             ))}
                                         </select>
@@ -231,14 +231,30 @@ export default function Index({
                                         />
                                     </div>
 
-                                    <div className="flex items-end">
+                                    <div className="flex space-x-2 items-end">
                                         <button
                                             type="submit"
                                             disabled={processing}
-                                            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
+                                            className="px-2 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
                                         >
-                                            Registrar
+                                          Agregar
                                         </button>
+
+                                        <a
+                                            href={`/reporte-asistencias?tipo=semanal&fecha=${fechaActual}`}
+                                            target="_blank"
+                                            className="bg-blue-600 text-white px-2 py-2 rounded hover:bg-blue-700 "
+                                        >
+                                            Semanal
+                                        </a>
+
+                                        <a
+                                            href={`/reporte-asistencias?tipo=mensual&fecha=${fechaActual}`}
+                                            target="_blank"
+                                            className="bg-green-600 hover:bg-green-700  text-white px-2 py-2 rounded ml-4"
+                                        >
+                                             Mensual
+                                        </a>
                                     </div>
                                 </div>
                             </form>
@@ -320,6 +336,18 @@ export default function Index({
                                             )
                                         )}
                                     </tbody>
+
+                                    {asistenciasFiltradas.length === 0 && (
+                                        <tbody>
+                                            <tr className="text-center py-10">
+                                                <td colSpan={6}>
+                                                    <p className="text-2xl text-black py-5">
+                                                        No hay registros
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    )}
                                 </table>
                             </div>
                         </div>

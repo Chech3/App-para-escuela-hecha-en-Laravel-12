@@ -27,8 +27,9 @@ export default function Index({ personal }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-            setIsSubmitting(true);
-        router.post("/personalCocina", form, {
+        setIsSubmitting(true);
+        
+        router.post(route("personalCocina.store"), form, {
             onSuccess: () => {
                 setShowModal(false);
                 setIsSubmitting(false);
@@ -135,6 +136,18 @@ export default function Index({ personal }: Props) {
                                         </tr>
                                     ))}
                                 </tbody>
+
+                                 {personal.length === 0 && (
+                                    <tbody>
+                                        <tr className="text-center py-10">
+                                            <td colSpan={5}>
+                                                <p className="text-2xl text-black py-2">
+                                                    No hay registros
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                )}
                             </table>
                         </div>
 
