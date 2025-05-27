@@ -18,7 +18,7 @@
         <div class="header">
             <img src="{{ public_path('/escudo.jpg') }}" alt="Logo" width="100">
             <h2>INSTITUCIÓN EDUCATIVA</h2>
-            <p>Dirección: Calle 123, Ciudad</p>
+            <p>Dirección:  Calle Principal La Pitahaya Vía Baraived Sector El Molino</p>
             <p>Teléfono: (123) 456-7890</p>
         </div>
 

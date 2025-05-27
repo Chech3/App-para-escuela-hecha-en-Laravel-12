@@ -24,6 +24,7 @@ export default function Index({ horarios }: Props) {
     const [showModalE, setShowModalE] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [modoEdicion, setModoEdicion] = useState(false);
 
     const eliminar = (id: number) => {
         router.delete(route("horarios.destroy", { id }), {
@@ -37,19 +38,44 @@ export default function Index({ horarios }: Props) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        router.post(
-            route("horarios.store"),
-            { dia, hora_inicio: horaInicio, hora_fin: horaFin },
-            {
+
+        const payload = {
+            dia,
+            hora_inicio: horaInicio,
+            hora_fin: horaFin,
+        };
+
+        if (modoEdicion && idM !== null) {
+            router.put(route("horarios.update", { id: idM }), payload, {
                 onSuccess: () => {
-                    setDia("");
-                    setHoraInicio("");
-                    setHoraFin("");
-                    setShowModal(false);
-                    setIsSubmitting(false);
+                    resetForm();
                 },
-            }
-        );
+            });
+        } else {
+            router.post(route("horarios.store"), payload, {
+                onSuccess: () => {
+                    resetForm();
+                },
+            });
+        }
+    };
+    const resetForm = () => {
+        setDia("");
+        setHoraInicio("");
+        setHoraFin("");
+        setIdM(null);
+        setModoEdicion(false);
+        setShowModal(false);
+        setIsSubmitting(false);
+    };
+
+    const handleEdit = (horario: Horario) => {
+        setDia(horario.dia);
+        setHoraInicio(horario.hora_inicio);
+        setHoraFin(horario.hora_fin);
+        setIdM(horario.id); // Guardamos el id para el update
+        setModoEdicion(true);
+        setShowModal(true);
     };
 
     return (
@@ -127,7 +153,7 @@ export default function Index({ horarios }: Props) {
                                             <td className="px-4 py-2">
                                                 {convertirHoraAMPM(e.hora_fin)}
                                             </td>
-                                            <td className="px-4 py-2">
+                                            <td className="px-4 py-2 space-x-2">
                                                 <button
                                                     onClick={() => {
                                                         setShowModalE(true);
@@ -139,6 +165,18 @@ export default function Index({ horarios }: Props) {
                                                         className="h-4 w-4"
                                                         src="/delete.svg"
                                                         alt="eliminar"
+                                                    />
+                                                </button>
+                                                <button
+                                                    onClick={() =>
+                                                        handleEdit(e)
+                                                    }
+                                                    className="bg-yellow-400 rounded text-white px-4 py-2 mr-2 hover:bg-yellow-500"
+                                                >
+                                                    <img
+                                                        className="h-4 w-4"
+                                                        src="/edit.svg"
+                                                        alt="editar"
                                                     />
                                                 </button>
                                             </td>

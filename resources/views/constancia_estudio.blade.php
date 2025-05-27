@@ -89,7 +89,7 @@
         <div class="header">
             <h2>{{ strtoupper($institucion) }}</h2>
             <p>RUC: 12345678901 | Resolución de creación: 0001-2021-MINEDU</p>
-            <p>Dirección: Av. Principal 123, Ciudad | Teléfono: (01) 123-4567</p>
+            <p>Dirección: Calle Principal La Pitahaya  Vía Baraived Sector El Molino | Teléfono: (01) 123-4567</p>
         </div>
 
         <div class="title">

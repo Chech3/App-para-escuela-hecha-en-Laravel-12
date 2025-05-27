@@ -36,7 +36,7 @@ class ConstanciaController extends Controller
         $data = [
             'student' => $student,
             'fecha' => $fecha,
-            'director' => 'Nombre del Director',
+            'director' => 'Jose Argenis Martinez Torres',
             'institucion' => 'Unidad Educativa Nacional Simon Rodriguez',
             'sello' => public_path('/sello.jpg'),
             'numeroConstancia' => 'EST-' . now()->format('Y') . '-' . str_pad($student->id, 5, '0', STR_PAD_LEFT),

@@ -29,6 +29,12 @@ export default function Dashboard() {
             href: '/horarios',
             image: '/horario.png',
         },
+
+        {
+            title: 'Asistencia',
+            href: '/asistencia',
+            image: '/work.svg',
+        },
     ];
 
     return (

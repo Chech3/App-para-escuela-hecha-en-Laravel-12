@@ -62,7 +62,15 @@ class GradoController extends Controller
      */
     public function update(Request $request, Grado $grado)
     {
-        //
+
+       $grado = Grado::findOrFail($grado->id);
+
+        if ($grado) {
+            $grado->update([
+                'nombre' => $request->nombre,
+            ]);
+        }
+        return redirect()->back()->with('success', 'Grado actualizado exitosamente.');
     }
 
     /**

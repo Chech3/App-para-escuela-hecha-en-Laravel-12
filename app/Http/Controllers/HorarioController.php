@@ -13,7 +13,7 @@ class HorarioController extends Controller
      */
     public function index(Request $request)
     {
-      
+
         $search = $request->input('search', '');
 
         // Consulta 
@@ -83,7 +83,17 @@ class HorarioController extends Controller
      */
     public function update(Request $request, Horario $horario)
     {
-        //
+        $horario = Horario::findOrFail($horario->id);
+
+        if ($horario) {
+            $horario->update([
+                'nombre' => $request->nombre,
+                'dia' => $request->dia,
+                'hora_inicio' => $request->hora_inicio,
+                'hora_fin' => $request->hora_fin,
+            ]);
+        }
+        return redirect()->back()->with('success', 'Horario actualizado exitosamente.');
     }
 
     /**

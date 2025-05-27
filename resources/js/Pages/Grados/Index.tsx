@@ -1,12 +1,12 @@
 import { Head, router, usePage } from "@inertiajs/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import TextInput from "@/Components/TextInput";
 import Modal from "@/Components/Modal";
 import SearchBar from "@/Components/SearchBar";
 
 interface Grado {
-    id: number;
+    id: number | null;
     nombre: string;
     codigo: number;
 }
@@ -21,22 +21,40 @@ export default function Index({ grados }: Props) {
     const [idM, setIdM] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<{
+        id: number | null;
+        nombre: string;
+    }>({
+        id: null,
         nombre: "",
     });
+
+    const closeModalAndReset = () => {
+        setShowModal(false);
+        setForm({ id: null, nombre: "" });
+        setIsSubmitting(false);
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        router.post("/grados", form, {
-            onSuccess: () => {
-                setShowModal(false);
-                setIsSubmitting(false);
-                setForm({
-                    nombre: "",
-                });
-            },
-        });
+
+        if (form.id === null) {
+            // Crear
+            router.post(route("grados.store"), form, {
+                onSuccess: () => {
+                    closeModalAndReset();
+                },
+                onFinish: () => setIsSubmitting(false),
+            });
+        } else {
+            router.put(route("grados.update", { id: form.id }), form, {
+                 onSuccess: () => {
+                    closeModalAndReset();
+                },
+                onFinish: () => setIsSubmitting(false),
+            })
+        }
     };
 
     const eliminar = (id: number) => {
@@ -47,6 +65,14 @@ export default function Index({ grados }: Props) {
                     setIdM(null);
                 },
             };
+    };
+
+    const handleEdit = (grado: Grado) => {
+        setForm({
+            id: grado.id,
+            nombre: grado.nombre,
+        });
+        setShowModal(true);
     };
 
     return (
@@ -109,7 +135,7 @@ export default function Index({ grados }: Props) {
                                                 {e.nombre}
                                             </td>
 
-                                            <td className="px-4 py-2 flex justify-center">
+                                            <td className="px-4 py-2 flex justify-center space-x-2">
                                                 <button
                                                     onClick={() => {
                                                         setShowModalE(true),
@@ -121,6 +147,19 @@ export default function Index({ grados }: Props) {
                                                         className="h-4 w-4"
                                                         src="/delete.svg"
                                                         alt="eliminar"
+                                                    />
+                                                </button>
+
+                                                <button
+                                                    onClick={() =>
+                                                        handleEdit(e)
+                                                    }
+                                                    className="bg-yellow-500 rounded text-white px-4 py-2 hover:bg-yellow-600 mr-2"
+                                                >
+                                                    <img
+                                                        className="h-4 w-4"
+                                                        src="/edit.svg"
+                                                        alt="editar"
                                                     />
                                                 </button>
                                             </td>

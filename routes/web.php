@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('estudiantes', EstudianteController::class)->names('estudiantes');
     Route::resource('grados', GradoController::class)->names(['grados']);
+
     Route::resource('secciones', SeccionesController::class)->names(['secciones']);
     Route::resource('docente', DocenteController::class)->names(['profesores']);
     Route::resource('horarios', HorarioController::class)->names(['horarios']);
