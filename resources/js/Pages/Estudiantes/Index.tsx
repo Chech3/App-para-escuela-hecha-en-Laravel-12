@@ -1,6 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage, router } from "@inertiajs/react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Modal from "@/Components/Modal";
 import { User } from "@/types/inertia";
 import SearchBar from "@/Components/SearchBar";
@@ -44,6 +44,7 @@ export default function Index() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
     const [modoEdicion, setModoEdicion] = useState(false);
+    const [showDropdown, setShowDropdown] = useState<boolean>(false);
     const [form, setForm] = useState({
         nombre: "",
         apellido: "",
@@ -53,6 +54,8 @@ export default function Index() {
         grado_id: "",
         seccion_id: "",
     });
+
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -65,7 +68,9 @@ export default function Index() {
             });
         } else {
             router.post("/estudiantes", form, {
-                onSuccess: () => {resetForm();},
+                onSuccess: () => {
+                    resetForm();
+                },
             });
         }
     };
@@ -97,10 +102,10 @@ export default function Index() {
     };
 
     const handleEdit = (estudiante: Estudiante) => {
-        console.log(estudiante)
+        console.log(estudiante);
         const fecha = estudiante.fecha_nacimiento
-        ? new Date(estudiante.fecha_nacimiento).toISOString().split("T")[0]
-        : "";
+            ? new Date(estudiante.fecha_nacimiento).toISOString().split("T")[0]
+            : "";
         setForm({
             nombre: estudiante.nombre,
             apellido: estudiante.apellido,
@@ -117,6 +122,21 @@ export default function Index() {
         setModoEdicion(true);
         setShowModal(true);
     };
+
+    useEffect(() => {
+        function handleClickOutside(event: any) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                setShowDropdown(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     return (
         <AuthenticatedLayout
@@ -204,59 +224,107 @@ export default function Index() {
                                             <td className="px-4 py-2">
                                                 {e.seccion.nombre}
                                             </td>
-                                            <td className="px-4 py-2 space-x-2 flex">
-                                                <button
-                                                    onClick={() => {
-                                                        setShowModalE(true);
-                                                        setIdM(e.id);
-                                                    }}
-                                                    className="bg-red-500 rounded px-2 py-2 hover:bg-red-600"
-                                                >
-                                                    <img
-                                                        className="h-4 w-4"
-                                                        src="/delete.svg"
-                                                        alt="eliminar"
-                                                    />
-                                                </button>
+                                            <td className="px-4 py-2">
+                                                <div className="relative">
+                                                <div className="flex space-x-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            handleEdit(e);
+                                                            setShowDropdown(
+                                                                false
+                                                            );
+                                                        }}
+                                                        className="flex items-center rounded-md px-2 py-2 bg-yellow-300 hover:bg-yellow-400"
+                                                    >
+                                                        <img
+                                                            src="/edit.svg"
+                                                            alt="Editar"
+                                                            className="h-4 w-4"
+                                                        />
+                                                    </button>
+                                                    <button
+                                                        className="bg-gray-300 hover:bg-gray-400 px-2 py-2 rounded-md"
+                                                        onClick={() =>
+                                                            setShowDropdown(
+                                                                !showDropdown
+                                                            )
+                                                        }
+                                                    >
+                                                        <img
+                                                            src="/more.svg"
+                                                            alt="Más opciones"
+                                                            className="h-4 w-4 backdrop-invert-0 rounded-md"
+                                                        />
+                                                    </button>
+                                                </div>
 
-                                                <button
-                                                    onClick={() =>
-                                                        handleEdit(e)
-                                                    }
-                                                    className="bg-yellow-500 rounded text-white px-2 py-2 hover:bg-yellow-600 mr-2"
-                                                >
-                                                    <img
-                                                        className="h-4 w-4"
-                                                        src="/edit.svg"
-                                                        alt="editar"
-                                                    />
-                                                </button>
+                                                    {showDropdown && (
+                                                        <div
+                                                            ref={dropdownRef}
+                                                            className="fixed -right-4 mt-2  transform -translate-x-1/2 z-50 bg-white border rounded shadow-lg w-48"
+                                                        >
+                                                            <button
+                                                                onClick={() => {
+                                                                    setShowModalE(
+                                                                        true
+                                                                    );
+                                                                    setIdM(
+                                                                        e.id
+                                                                    );
+                                                                    setShowDropdown(
+                                                                        false
+                                                                    );
+                                                                }}
+                                                                className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
+                                                            >
+                                                                <img
+                                                                    src="/delete.svg"
+                                                                    alt="Eliminar"
+                                                                    className="h-4 w-4 mr-2"
+                                                                />
+                                                                Eliminar
+                                                            </button>
 
-                                                <a
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    href={`/constancia/${e.id}`}
-                                                    className="bg-blue-500 rounded px-2 py-2 hover:bg-blue-600"
-                                                >
-                                                    <img
-                                                        className="h-4 w-4"
-                                                        src="/print.svg"
-                                                        alt="Imprimit"
-                                                    />
-                                                </a>
+                                                            <a
+                                                                href={`/constancia/${e.id}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                onClick={() =>
+                                                                    setShowDropdown(
+                                                                        false
+                                                                    )
+                                                                }
+                                                                className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
+                                                            >
+                                                                <img
+                                                                    src="/print.svg"
+                                                                    alt="Constancia"
+                                                                    className="h-4 w-4 mr-2"
+                                                                />
+                                                                Constancia
+                                                            </a>
 
-                                                <a
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    href={`/constancia-estudio/${e.id}`}
-                                                    className="bg-green-500 rounded px-2 py-2 hover:bg-green-600"
-                                                >
-                                                    <img
-                                                        className="h-4 w-4"
-                                                        src="/print.svg"
-                                                        alt="Imprimit"
-                                                    />
-                                                </a>
+                                                            <a
+                                                                href={`/constancia-estudio/${e.id}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                onClick={() =>
+                                                                    setShowDropdown(
+                                                                        false
+                                                                    )
+                                                                }
+                                                                className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
+                                                            >
+                                                                <img
+                                                                    src="/print.svg"
+                                                                    alt="Constancia Estudio"
+                                                                    className="h-4 w-4 mr-2"
+                                                                />
+                                                                Const. Estudio
+                                                            </a>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
@@ -439,7 +507,7 @@ export default function Index() {
                                 disabled={isSubmitting}
                                 className="px-4 py-2 disabled:opacity-75 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:cursor-not-allowed"
                             >
-                                 {modoEdicion ? "Actualizar" : "Guardar"}
+                                {modoEdicion ? "Actualizar" : "Guardar"}
                             </button>
                         </div>
                     </form>
@@ -448,7 +516,9 @@ export default function Index() {
             {/* Modal para eliminar Seccion */}
             <Modal
                 show={showModalE}
-                onClose={() => {setShowModalE(false)}}
+                onClose={() => {
+                    setShowModalE(false);
+                }}
                 maxWidth="lg"
             >
                 <div className="p-6">

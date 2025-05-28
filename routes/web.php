@@ -50,6 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/constancia-estudio/{id}', [ConstanciaController::class, 'generarConstanciaEstudio'])
         ->name('constancia.estudio');
 
+    Route::get('/reporte-retiro/{id}', [ConstanciaController::class, 'generarConstanciaRetiro']);
+
 
     Route::get('asistencias', [AsistenciaController::class, 'index'])->name('asistencias.index');
     Route::post('asistencias', [AsistenciaController::class, 'store'])->name('asistencias.store');

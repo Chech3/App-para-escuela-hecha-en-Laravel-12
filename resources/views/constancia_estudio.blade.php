@@ -6,8 +6,7 @@
     <title>Constancia de Estudio</title>
     <style>
         body {
-            font-family: "Times New Roman", serif;
-            font-size: 14px;
+            font-family: Arial, sans-serif;
             line-height: 1.5;
         }
 
@@ -25,8 +24,9 @@
         }
 
         .content {
-            margin: 20px 0;
-            text-align: justify;
+            margin: 80px 0;
+            text-align: center;
+            font-size: 18px
         }
 
         .signature {
@@ -47,17 +47,11 @@
             position: relative;
         }
 
-        .sello {
-            position: absolute;
-            right: 50px;
-            bottom: 400px;
-            opacity: 1;
-        }
 
-         .logo {
+        .logo {
             position: absolute;
-            right: 50px;
-            top: 100px;
+            right: 30px;
+            top: 40px;
             opacity: 1;
         }
 
@@ -75,53 +69,89 @@
         .clear {
             clear: both;
         }
+
+        .institucion {
+            font-size: 16px;
+        }
+
+        .efecto {
+            font-weight: bold;
+            margin: 0;
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body>
     <div class="border">
-        @if (file_exists($sello))
-            <img src="{{ $sello }}" class="sello" width="120">
-        @endif
 
         <img src="{{ public_path('/escudo.jpg') }}" alt="Logo" width="60" class="logo">
-        
-        <div class="header">
-            <h2>{{ strtoupper($institucion) }}</h2>
-            <p>RUC: 12345678901 | Resolución de creación: 0001-2021-MINEDU</p>
-            <p>Dirección: Calle Principal La Pitahaya  Vía Baraived Sector El Molino | Teléfono: (01) 123-4567</p>
-        </div>
+
+        <h2 class="institucion">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <p style="font-weight: bold; margin: 0;">REPÚBLICA BOLIVARIANA DE VENEZUELA</p>
+                <p style="font-weight: bold; margin: 0;">MINISTERIO DEL PODER POPULAR PARA LA EDUCACIÓN</p>
+                <p style="font-weight: bold; margin: 0;">CENTRO DE DESARROLLO DE LA CALIDAD EDUCATIVA (CDCE)</p>
+                <p style="font-weight: bold; margin: 0;">UNIDAD EDUCATIVA NACIONAL "SIMON RODRIGUEZ"</p>
+            </div>
+        </h2>
 
         <div class="title">
             CONSTANCIA DE ESTUDIO
         </div>
 
-        <div class="content">
+        {{-- <div class="content">
             <p>Quien suscribe, {{ $director }}, Director(a) de {{ $institucion }}, hace constar que:</p>
 
             <p><strong>{{ strtoupper($student->nombre) }}
                     {{ strtoupper($student->apellido) }}</strong>, identificado(a) con
-               N° <strong>{{ $student->cedula ?? "N/P" }}</strong>,
+                N° <strong>{{ $student->cedula ?? 'N/P' }}</strong>,
                 está matriculado(a) en esta institución educativa en el año académico {{ date('Y') }},
                 en el {{ $student->grado->nombre }} grado.</p>
 
 
             <p>La presente constancia se expide a solicitud del interesado(a) para los fines que estime conveniente.</p>
+        </div> --}}
+
+
+        <div class="content">
+            Quien suscribe, <span class="efecto">{{ $director }}
+            </span> Titular de la cédula de
+            identidad <span class="efecto">N° V-17.666.104,
+            </span> ,en mi condición de Director (E) de la Unidad Educativa
+            Nacional SIMON RODRIGUEZ, ubicada en Pitahaya, Parroquia Buena Vista,
+            Municipio Falcón, Estado Falcón, por medio de la presente HAGO CONSTAR que
+            el (la) estudiante: <strong>{{ strtoupper($student->nombre) }}
+                {{ strtoupper($student->apellido) }}</strong>,
+            Cédula Escolar <span class="efecto">{{ $student->cedula }}</span>, de <span
+                class="efecto">{{ $edad }} </span> años , cursa estudios de
+            <span class="efecto">
+                {{ $student->grado->nombre }}
+            </span>
+            de Educación
+            <span class="efecto">
+                {{ $student->grado->tipo }}
+            </span>
+            ,en la Unidad Educativa Nacional "SIMON RODRIGUEZ", código
+            plantel:
+            <span class="efecto">
+                OD09401109.
+            </span>
+        </div>
+
+        <div class="content">
+            Constancia que se expide a petición de parte interesada a los ______ días
+            del mes de _____________ del año____________
         </div>
 
         <div class="signature">
-            <p>Atentamente,</p>
-            <br><br><br>
             <p>_________________________</p>
             <p><strong>{{ $director }}</strong></p>
             <p>Director(a)</p>
-            <p>{{ $institucion }}</p>
+            <p style="font-weight: bold; margin: 0;">N° Telf.: 0412-6669403</p>
         </div>
 
         <div class="footer">
-            <div class="left">Código de verificación: {{ substr(md5($student->id . $student->documento), 0, 10) }}
-            </div>
-            <div class="right">Constancia N°: {{ $numeroConstancia }}</div>
             <div class="clear"></div>
             <p>Fecha de emisión: {{ $fecha }}</p>
         </div>

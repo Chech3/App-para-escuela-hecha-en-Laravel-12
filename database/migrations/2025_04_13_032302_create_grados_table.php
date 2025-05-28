@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('grados', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->enum('tipo', ['Primaria', 'Inicial'])->default('Primaria');
             $table->timestamps();
         });
     }

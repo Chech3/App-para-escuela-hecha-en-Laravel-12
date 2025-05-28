@@ -8,7 +8,7 @@ import SearchBar from "@/Components/SearchBar";
 interface Grado {
     id: number | null;
     nombre: string;
-    codigo: number;
+    tipo: "Primaria" | "Inicial";
 }
 
 interface Props {
@@ -24,14 +24,16 @@ export default function Index({ grados }: Props) {
     const [form, setForm] = useState<{
         id: number | null;
         nombre: string;
+        tipo: string;
     }>({
         id: null,
         nombre: "",
+        tipo: "Primaria",
     });
 
     const closeModalAndReset = () => {
         setShowModal(false);
-        setForm({ id: null, nombre: "" });
+        setForm({ id: null, nombre: "", tipo: "Primaria" });
         setIsSubmitting(false);
     };
 
@@ -71,6 +73,7 @@ export default function Index({ grados }: Props) {
         setForm({
             id: grado.id,
             nombre: grado.nombre,
+            tipo: grado.tipo,
         });
         setShowModal(true);
     };
@@ -122,6 +125,11 @@ export default function Index({ grados }: Props) {
                                         <th className="px-4 py-2 text-left">
                                             Nombre
                                         </th>
+
+                                         <th className="px-4 py-2 text-left">
+                                            Tipo
+                                        </th>
+
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -133,6 +141,9 @@ export default function Index({ grados }: Props) {
                                             </td>
                                             <td className="px-4 py-2">
                                                 {e.nombre}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {e.tipo}
                                             </td>
 
                                             <td className="px-4 py-2 flex justify-center space-x-2">
@@ -170,7 +181,7 @@ export default function Index({ grados }: Props) {
                                 {grados.length === 0 && (
                                     <tbody>
                                         <tr className="text-center py-10">
-                                            <td colSpan={3}>
+                                            <td colSpan={4}>
                                                 <p className="text-2xl text-black py-2">
                                                     No hay registros
                                                 </p>
@@ -211,6 +222,22 @@ export default function Index({ grados }: Props) {
                                             required
                                         />
                                     </div>
+
+                                    <select
+                                        value={form.tipo}
+                                        onChange={(e) =>
+                                            setForm({
+                                                ...form,
+                                                tipo: e.target.value,
+                                            })
+                                        }
+                                        className="w-full border px-3 py-2"
+                                    >
+                                        <option value="Primaria">
+                                            Primaria
+                                        </option>
+                                        <option value="Inicial">Inicial</option>
+                                    </select>
 
                                     <div className="flex justify-end gap-2 pt-4">
                                         <button

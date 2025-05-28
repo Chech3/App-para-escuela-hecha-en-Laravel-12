@@ -26,6 +26,7 @@ class GradoController extends Controller
             return [
                 'id' => $grado->id,
                 'nombre' => $grado->nombre,
+                'tipo' => $grado->tipo,
             ];
         });
 
@@ -38,8 +39,12 @@ class GradoController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all();
-        Grado::create($data);
+        $request->validate([
+            'nombre' => 'required|string',
+            'tipo' => 'required|in:Primaria,Inicial',
+        ]);
+
+        Grado::create($request->only('nombre', 'tipo'));
 
         return redirect()->back()->with('success', 'Grado creado exitosamente.');
     }
@@ -68,6 +73,7 @@ class GradoController extends Controller
         if ($grado) {
             $grado->update([
                 'nombre' => $request->nombre,
+                'tipo' => $request->tipo,
             ]);
         }
         return redirect()->back()->with('success', 'Grado actualizado exitosamente.');
