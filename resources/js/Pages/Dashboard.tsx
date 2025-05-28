@@ -32,7 +32,7 @@ export default function Dashboard() {
 
         {
             title: 'Asistencia',
-            href: '/asistencia',
+            href: '/asistencias',
             image: '/work.svg',
         },
     ];

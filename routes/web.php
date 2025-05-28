@@ -51,10 +51,11 @@ Route::middleware('auth')->group(function () {
         ->name('constancia.estudio');
 
 
-    Route::get('/asistencias', [AsistenciaController::class, 'index'])->name('asistencias');
-    Route::post('/asistencias', [AsistenciaController::class, 'store']);
-    Route::put('/asistencias/{asistencia}', [AsistenciaController::class, 'update']);
-    Route::get('/reporte-asistencias', [AsistenciaController::class, 'generarReporte']);
+    Route::get('asistencias', [AsistenciaController::class, 'index'])->name('asistencias.index');
+    Route::post('asistencias', [AsistenciaController::class, 'store'])->name('asistencias.store');
+    Route::delete('asistencias/{asistencia}', [AsistenciaController::class, 'destroy'])->name('asistencias.destroy'); // ✅ Corregido
+    Route::put('asistencias/{asistencia}', [AsistenciaController::class, 'update'])->name('asistencias.update');
+    Route::get('reporte-asistencias', [AsistenciaController::class, 'generarReporte']);
 
 
     // Route::post('/asistencias/masivo', [AsistenciaController::class, 'storeMassive'])

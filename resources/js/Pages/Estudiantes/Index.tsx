@@ -43,6 +43,7 @@ export default function Index() {
     const [showModalE, setShowModalE] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
+    const [modoEdicion, setModoEdicion] = useState(false);
     const [form, setForm] = useState({
         nombre: "",
         apellido: "",
@@ -56,22 +57,34 @@ export default function Index() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        router.post("/estudiantes", form, {
-            onSuccess: () => {
-                setShowModal(false);
-                setShowModalE(false);
-                setIsSubmitting(false);
-                setForm({
-                    nombre: "",
-                    apellido: "",
-                    cedula: "",
-                    fecha_nacimiento: "",
-                    genero: "",
-                    grado_id: "",
-                    seccion_id: "",
-                });
-            },
+        if (modoEdicion && idM !== null) {
+            router.put(route("estudiantes.update", { id: idM }), form, {
+                onSuccess: () => {
+                    resetForm();
+                },
+            });
+        } else {
+            router.post("/estudiantes", form, {
+                onSuccess: () => {resetForm();},
+            });
+        }
+    };
+
+    const resetForm = () => {
+        setForm({
+            nombre: "",
+            apellido: "",
+            cedula: "",
+            fecha_nacimiento: "",
+            genero: "",
+            grado_id: "",
+            seccion_id: "",
         });
+
+        setIdM(null);
+        setModoEdicion(false);
+        setShowModal(false);
+        setIsSubmitting(false);
     };
 
     const eliminar = (id: number) => {
@@ -81,6 +94,28 @@ export default function Index() {
                 setIdM(null);
             },
         });
+    };
+
+    const handleEdit = (estudiante: Estudiante) => {
+        console.log(estudiante)
+        const fecha = estudiante.fecha_nacimiento
+        ? new Date(estudiante.fecha_nacimiento).toISOString().split("T")[0]
+        : "";
+        setForm({
+            nombre: estudiante.nombre,
+            apellido: estudiante.apellido,
+            fecha_nacimiento: fecha,
+            genero: estudiante.genero,
+            cedula:
+                estudiante.cedula !== undefined
+                    ? String(estudiante.cedula)
+                    : "",
+            grado_id: estudiante.grado ? String(estudiante.grado.id) : "",
+            seccion_id: estudiante.seccion ? String(estudiante.seccion.id) : "",
+        });
+        setIdM(estudiante.id); // <-- guardar ID del docente a editar
+        setModoEdicion(true);
+        setShowModal(true);
     };
 
     return (
@@ -184,6 +219,19 @@ export default function Index() {
                                                     />
                                                 </button>
 
+                                                <button
+                                                    onClick={() =>
+                                                        handleEdit(e)
+                                                    }
+                                                    className="bg-yellow-500 rounded text-white px-2 py-2 hover:bg-yellow-600 mr-2"
+                                                >
+                                                    <img
+                                                        className="h-4 w-4"
+                                                        src="/edit.svg"
+                                                        alt="editar"
+                                                    />
+                                                </button>
+
                                                 <a
                                                     target="_blank"
                                                     rel="noopener noreferrer"
@@ -214,8 +262,7 @@ export default function Index() {
                                     ))}
                                 </tbody>
 
-                                
-                                 {estudiantes.length === 0 && (
+                                {estudiantes.length === 0 && (
                                     <tbody>
                                         <tr className="text-center py-10">
                                             <td colSpan={7}>
@@ -235,7 +282,9 @@ export default function Index() {
             {/* Modal de Agregar Estudiante */}
             <Modal
                 show={showModal}
-                onClose={() => setShowModal(false)}
+                onClose={() => {
+                    setShowModal(false), resetForm();
+                }}
                 maxWidth="lg"
             >
                 <div className="p-6">
@@ -390,7 +439,7 @@ export default function Index() {
                                 disabled={isSubmitting}
                                 className="px-4 py-2 disabled:opacity-75 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:cursor-not-allowed"
                             >
-                                Guardar
+                                 {modoEdicion ? "Actualizar" : "Guardar"}
                             </button>
                         </div>
                     </form>
@@ -399,12 +448,12 @@ export default function Index() {
             {/* Modal para eliminar Seccion */}
             <Modal
                 show={showModalE}
-                onClose={() => setShowModalE(false)}
+                onClose={() => {setShowModalE(false)}}
                 maxWidth="lg"
             >
                 <div className="p-6">
                     <p>
-                        ¿Estas seguro que deseas eliminar este seccion? Esta
+                        ¿Estas seguro que deseas eliminar este estudiante? Esta
                         acción no se puede deshacer.
                     </p>
                     <div className="flex justify-end gap-2 pt-4">

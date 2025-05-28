@@ -84,7 +84,15 @@ class PersonalCocinaController extends Controller
      */
     public function update(Request $request, Personal_cocina $personalCocina)
     {
-        //
+        $personalCocina = Personal_cocina::findOrFail($personalCocina->id);
+
+        if ($personalCocina) {
+            $personalCocina->update([
+                'nombre' => $request->nombre,
+                'apellido' => $request->apellido,
+            ]);
+        }
+        return redirect()->back()->with('success', 'Personal de Cocina actualizado exitosamente.');
     }
 
     /**

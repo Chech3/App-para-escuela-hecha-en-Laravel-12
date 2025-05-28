@@ -80,7 +80,18 @@ class DocenteController extends Controller
      */
     public function update(Request $request, Docente $docente)
     {
-        //
+        $docente = Docente::findOrFail($docente->id);
+
+        if ($docente) {
+            $docente->update([
+                'nombre' => $request->nombre,
+                'apellido' => $request->apellido,
+                'correo' => $request->correo ,
+                'especialidad' => $request->especialidad,
+                'horario_id' => $request->horario_id
+            ]);
+        }
+        return redirect()->back()->with('success', 'Docente actualizado exitosamente.');
     }
 
     /**
@@ -90,7 +101,7 @@ class DocenteController extends Controller
     {
 
 
-         if ($docente->secciones()->exists()) {
+        if ($docente->secciones()->exists()) {
 
             return redirect()->back()->with('error', 'No se puede eliminar el docente porque está asignado a una sección.');
         }

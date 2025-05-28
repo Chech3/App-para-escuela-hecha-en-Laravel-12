@@ -23,6 +23,7 @@ export default function Index() {
     const [showModal, setShowModal] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [modoEdicion, setModoEdicion] = useState(false);
     const [form, setForm] = useState({
         nombre: "",
         apellido: "",
@@ -43,19 +44,47 @@ export default function Index() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        router.post("/docente", form, {
-            onSuccess: () => {
-                setShowModal(false);
-                 setIsSubmitting(false);
-                setForm({
-                    nombre: "",
-                    apellido: "",
-                    especialidad: "",
-                    correo: "",
-                    horario_id: "",
-                });
-            },
+
+        if (modoEdicion && idM !== null) {
+            router.put(route("docente.update", { id: idM }), form, {
+                onSuccess: () => {
+                    resetForm();
+                },
+            });
+        } else {
+            router.post(route("docente.store"), form, {
+                onSuccess: () => {
+                    resetForm();
+                },
+            });
+        }
+    };
+
+    const resetForm = () => {
+        setForm({
+            nombre: "",
+            apellido: "",
+            especialidad: "",
+            correo: "",
+            horario_id: "",
         });
+        setIdM(null);
+        setModoEdicion(false);
+        setShowModal(false);
+        setIsSubmitting(false);
+    };
+
+    const handleEdit = (docente: Docente) => {
+        setForm({
+            nombre: docente.nombre,
+            apellido: docente.apellido,
+            especialidad: docente.especialidad,
+            correo: docente.correo,
+            horario_id: docente.horario ? docente.horario.id : "",
+        });
+        setIdM(docente.id); // <-- guardar ID del docente a editar
+        setModoEdicion(true); 
+        setShowModal(true);
     };
 
     return (
@@ -160,6 +189,19 @@ export default function Index() {
                                                         alt="eliminar"
                                                     />
                                                 </button>
+
+                                                <button
+                                                    onClick={() =>
+                                                        handleEdit(e)
+                                                    }
+                                                    className="bg-yellow-500 rounded text-white px-4 py-2 hover:bg-yellow-600 mr-2"
+                                                >
+                                                    <img
+                                                        className="h-4 w-4"
+                                                        src="/edit.svg"
+                                                        alt="editar"
+                                                    />
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
@@ -184,7 +226,7 @@ export default function Index() {
             {/* Modal de Agregar Docente */}
             <Modal
                 show={showModal}
-                onClose={() => setShowModal(false)}
+                onClose={() => {setShowModal(false), resetForm()}}
                 maxWidth="lg"
             >
                 <div className="p-6">
@@ -361,7 +403,6 @@ export default function Index() {
                     </div>
                 </div>
             </Modal>
-            
         </AuthenticatedLayout>
     );
 }

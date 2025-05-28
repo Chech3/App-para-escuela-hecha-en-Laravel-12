@@ -2,6 +2,8 @@
 import { Head, useForm, router } from "@inertiajs/react";
 import { PageProps } from "@/types";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { useState } from "react";
+import Modal from "@/Components/Modal";
 
 interface Persona {
     id: number;
@@ -41,6 +43,9 @@ export default function Index({
         hora_entrada: new Date().toTimeString().substring(0, 5),
         observaciones: "",
     });
+    const [idM, setIdM] = useState<number | null>(null);
+    const [showModalE, setShowModalE] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -93,6 +98,18 @@ export default function Index({
     const asistenciasFiltradas = asistencias.filter(
         (a) => a.tipo === "docente" || a.tipo === "personal_cocina"
     );
+
+    const eliminar = (id: number) => {
+        router.delete(route("asistencias.destroy", { id }), {
+            onSuccess: () => {
+                setShowModalE(false);
+                setIdM(null);
+            },
+        });
+    };
+
+
+    
 
     return (
         <AuthenticatedLayout
@@ -237,7 +254,7 @@ export default function Index({
                                             disabled={processing}
                                             className="px-2 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
                                         >
-                                          Agregar
+                                            Agregar
                                         </button>
 
                                         <a
@@ -253,7 +270,7 @@ export default function Index({
                                             target="_blank"
                                             className="bg-green-600 hover:bg-green-700  text-white px-2 py-2 rounded ml-4"
                                         >
-                                             Mensual
+                                            Mensual
                                         </a>
                                     </div>
                                 </div>
@@ -324,7 +341,17 @@ export default function Index({
                                                         }
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                        <button className="bg-red-500 hover:bg-red-600 transition-all py-2 px-2 rounded-md">
+                                                        <button
+                                                            onClick={() => {
+                                                                setShowModalE(
+                                                                    true
+                                                                );
+                                                                setIdM(
+                                                                    asistencia.id
+                                                                );
+                                                            }}
+                                                            className="bg-red-500 rounded text-white px-4 py-2 hover:bg-red-600"
+                                                        >
                                                             <img
                                                                 className="h-4 w-4"
                                                                 src="/delete.svg"
@@ -354,6 +381,48 @@ export default function Index({
                     </div>
                 </div>
             </div>
+            <Modal
+                show={showModalE}
+                onClose={() => setShowModalE(false)}
+                maxWidth="lg"
+            >
+                <div className="p-6">
+                    <p>
+                        ¿Estas seguro que deseas eliminar esta asistencia? Esta
+                        acción no se puede deshacer.
+                    </p>
+                    <div className="flex justify-end gap-2 pt-4">
+                        <button
+                            type="button"
+                            onClick={() => setShowModalE(false)}
+                            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            onClick={() => {
+                                if (!isSubmitting) {
+                                    setIsSubmitting(true);
+                                    eliminar(idM!);
+                                    setTimeout(() => {
+                                        setShowModalE(false);
+                                        setIsSubmitting(false);
+                                    }, 900);
+                                }
+                            }}
+                            type="submit"
+                            className={`px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 ${
+                                isSubmitting
+                                    ? "opacity-75 cursor-not-allowed"
+                                    : ""
+                            }`}
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? "Eliminando..." : "Eliminar"}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </AuthenticatedLayout>
     );
 }

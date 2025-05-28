@@ -200,7 +200,7 @@ export default function Index({ horarios }: Props) {
                         {/* Modal para crear horario */}
                         <Modal
                             show={showModal}
-                            onClose={() => setShowModal(false)}
+                            onClose={() => {setShowModal(false), resetForm()}}
                             maxWidth="lg"
                         >
                             <form onSubmit={handleSubmit} className="mb-6">

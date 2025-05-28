@@ -8,7 +8,7 @@ import SearchBar from "@/Components/SearchBar";
 interface PersonalCocina {
     id: number;
     nombre: string;
-    apellido: number;
+    apellido: string;
 }
 
 interface Props {
@@ -20,25 +20,44 @@ export default function Index({ personal }: Props) {
     const [showModalE, setShowModalE] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const [modoEdicion, setModoEdicion] = useState(false);
     const [form, setForm] = useState({
-        nombre: "", apellido: "",
+        nombre: "",
+        apellido: "",
     });
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        
-        router.post(route("personalCocina.store"), form, {
-            onSuccess: () => {
-                setShowModal(false);
-                setIsSubmitting(false);
-                setForm({
-                    nombre: "",
-                    apellido: "",
-                });
-            },
+        if (modoEdicion && idM !== null) {
+            router.put(route("personalCocina.update", { id: idM }), form, {
+                onSuccess: () => {
+                    resetForm();
+                },
+            });
+        } else {
+            router.post(route("personalCocina.store"), form, {
+                onSuccess: () => {
+                    setShowModal(false);
+                    setIsSubmitting(false);
+                    setForm({
+                        nombre: "",
+                        apellido: "",
+                    });
+                },
+            });
+        }
+    };
+
+    const handleEdit = (personal: PersonalCocina) => {
+        setForm({
+            nombre: personal.nombre,
+            apellido: personal.apellido,
         });
+        setIdM(personal.id); // <-- guardar ID del docente a editar
+        setModoEdicion(true);
+        setShowModal(true);
     };
 
     const eliminar = (id: number) => {
@@ -49,6 +68,17 @@ export default function Index({ personal }: Props) {
                     setIdM(null);
                 },
             };
+    };
+
+    const resetForm = () => {
+        setForm({
+            nombre: "",
+            apellido: "",
+        });
+        setIdM(null);
+        setModoEdicion(false);
+        setShowModal(false);
+        setIsSubmitting(false);
     };
 
     return (
@@ -98,7 +128,7 @@ export default function Index({ personal }: Props) {
                                         <th className="px-4 py-2 text-left">
                                             Nombre
                                         </th>
-                                         <th className="px-4 py-2 text-left">
+                                        <th className="px-4 py-2 text-left">
                                             Apellido
                                         </th>
                                         <th>Acciones</th>
@@ -114,11 +144,11 @@ export default function Index({ personal }: Props) {
                                                 {e.nombre}
                                             </td>
 
-                                             <td className="px-4 py-2">
+                                            <td className="px-4 py-2">
                                                 {e.apellido}
                                             </td>
 
-                                            <td className="px-4 py-2 flex justify-center">
+                                            <td className="px-4 py-2 flex justify-center space-x-2">
                                                 <button
                                                     onClick={() => {
                                                         setShowModalE(true),
@@ -132,12 +162,25 @@ export default function Index({ personal }: Props) {
                                                         alt="eliminar"
                                                     />
                                                 </button>
+
+                                                <button
+                                                    onClick={() =>
+                                                        handleEdit(e)
+                                                    }
+                                                    className="bg-yellow-500 rounded text-white px-4 py-2 hover:bg-yellow-600 mr-2"
+                                                >
+                                                    <img
+                                                        className="h-4 w-4"
+                                                        src="/edit.svg"
+                                                        alt="editar"
+                                                    />
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
 
-                                 {personal.length === 0 && (
+                                {personal.length === 0 && (
                                     <tbody>
                                         <tr className="text-center py-10">
                                             <td colSpan={5}>
@@ -153,7 +196,9 @@ export default function Index({ personal }: Props) {
 
                         <Modal
                             show={showModal}
-                            onClose={() => setShowModal(false)}
+                            onClose={() => {
+                                setShowModal(false), resetForm();
+                            }}
                             maxWidth="lg"
                         >
                             <form onSubmit={handleSubmit} className="mb-6">
@@ -227,8 +272,8 @@ export default function Index({ personal }: Props) {
                         >
                             <div className="p-6">
                                 <p>
-                                    Estas seguro que deseas eliminar este personal?
-                                    Esta acción no se puede deshacer.
+                                    Estas seguro que deseas eliminar este
+                                    personal? Esta acción no se puede deshacer.
                                 </p>
                                 <div className="flex justify-end gap-2 pt-4">
                                     <button

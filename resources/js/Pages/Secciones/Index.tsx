@@ -44,7 +44,9 @@ export default function Index({ secciones, grados, docentes }: Props) {
     const [showModalE, setShowModalE] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
+    const [modoEdicion, setModoEdicion] = useState(false);
 
+    
     const eliminar = (id: number) => {
         router.delete(route("secciones.destroy", { id }), {
             onSuccess: () => {
@@ -63,16 +65,48 @@ export default function Index({ secciones, grados, docentes }: Props) {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        router.post("/secciones", form, {
+        if (modoEdicion && idM !== null) {
+            router.put(route("secciones.update", { id: idM }), form, {
+                onSuccess: () => {
+                    resetForm();
+                },
+            });
+        } else {
+            router.post("/secciones", form, {
             onSuccess: () => {
                 setForm({ nombre: "", grado_id: "", docente_id: "" }),
                     setShowModal(false);
                 setIsSubmitting(false);
             },
         });
+        }
+    };
+
+      const handleEdit = (seccion: Seccion) => {
+        setForm({
+            nombre: seccion.nombre,
+            grado_id: seccion.grado.id.toString(),
+            docente_id: seccion.docente?.id.toString() || "",
+        });
+        setIdM(seccion.id); // <-- guardar ID del docente a editar
+        setModoEdicion(true);
+        setShowModal(true);
+    };
+
+
+     const resetForm = () => {
+        setForm({
+            nombre: "",
+            grado_id: "",
+            docente_id: "",
+        });
+        setIdM(null);
+        setModoEdicion(false);
+        setShowModal(false);
+        setIsSubmitting(false);
     };
 
     return (
@@ -130,7 +164,7 @@ export default function Index({ secciones, grados, docentes }: Props) {
                                         <td className="p-3">
                                             {s.docente?.nombre ?? "No asignado"}
                                         </td>
-                                        <td className="px-4 py-2">
+                                        <td className="px-4 py-2 space-x-2">
                                             <button
                                                 onClick={() => {
                                                     setShowModalE(true);
@@ -144,6 +178,19 @@ export default function Index({ secciones, grados, docentes }: Props) {
                                                     alt="eliminar"
                                                 />
                                             </button>
+
+                                             <button
+                                                    onClick={() =>
+                                                        handleEdit(s)
+                                                    }
+                                                    className="bg-yellow-500 rounded text-white px-4 py-2 hover:bg-yellow-600 mr-2"
+                                                >
+                                                    <img
+                                                        className="h-4 w-4"
+                                                        src="/edit.svg"
+                                                        alt="editar"
+                                                    />
+                                                </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -164,7 +211,7 @@ export default function Index({ secciones, grados, docentes }: Props) {
 
                     <Modal
                         show={showModal}
-                        onClose={() => setShowModal(false)}
+                        onClose={() => {setShowModal(false), resetForm()}}
                         maxWidth="lg"
                     >
                         <form onSubmit={handleSubmit} className="mb-6  gap-4">

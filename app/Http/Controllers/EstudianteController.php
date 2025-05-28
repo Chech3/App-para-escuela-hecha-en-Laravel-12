@@ -14,45 +14,45 @@ class EstudianteController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index(Request $request)
-{
-    $search = $request->input('search', '');
+    public function index(Request $request)
+    {
+        $search = $request->input('search', '');
 
-    // Construir consulta con relaciones
-    $query = Estudiante::with(['grado', 'seccion'])->orderBy('created_at', 'desc');
+        // Construir consulta con relaciones
+        $query = Estudiante::with(['grado', 'seccion'])->orderBy('created_at', 'desc');
 
-    // Aplicar filtro de búsqueda si se proporcionó
-    if ($search) {
-        $query->where(function ($q) use ($search) {
-            $q->where('nombre', 'like', "%{$search}%")
-              ->orWhere('apellido', 'like', "%{$search}%")
-              ->orWhere('correo', 'like', "%{$search}%");
+        // Aplicar filtro de búsqueda si se proporcionó
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nombre', 'like', "%{$search}%")
+                    ->orWhere('apellido', 'like', "%{$search}%")
+                    ->orWhere('correo', 'like', "%{$search}%");
+            });
+        }
+
+        // Obtener y transformar los resultados
+        $estudiantes = $query->get()->map(function ($estudiante) {
+            return [
+                'id' => $estudiante->id,
+                'nombre' => $estudiante->nombre,
+                'apellido' => $estudiante->apellido,
+                'genero' => $estudiante->genero,
+                'cedula' => $estudiante->cedula,
+                'fecha_nacimiento' => $estudiante->fecha_nacimiento,
+                'grado' => $estudiante->grado ?? 'No asignado',
+                'seccion' => $estudiante->seccion ?? 'No asignado',
+            ];
         });
+
+        // Devolver vista con filtros y datos adicionales
+        return Inertia::render('Estudiantes/Index', [
+            'estudiantes' => $estudiantes,
+            'filters' => $request->only('search'),
+            'grados' => Grado::all()->map(fn($g) => ['id' => $g->id, 'nombre' => $g->nombre]),
+            'docentes' => Docente::all()->map(fn($d) => ['id' => $d->id, 'nombre' => $d->nombre, 'apellido' => $d->apellido]),
+            'secciones' => Secciones::all()->map(fn($s) => ['id' => $s->id, 'nombre' => $s->nombre]),
+        ]);
     }
-
-    // Obtener y transformar los resultados
-    $estudiantes = $query->get()->map(function ($estudiante) {
-        return [
-            'id' => $estudiante->id,
-            'nombre' => $estudiante->nombre,
-            'apellido' => $estudiante->apellido,
-            'correo' => $estudiante->correo,
-            'genero' => $estudiante->genero,
-            'cedula' => $estudiante->cedula,
-            'grado' => $estudiante->grado ?? 'No asignado',
-            'seccion' => $estudiante->seccion ?? 'No asignado',
-        ];
-    });
-
-    // Devolver vista con filtros y datos adicionales
-    return Inertia::render('Estudiantes/Index', [
-        'estudiantes' => $estudiantes,
-        'filters' => $request->only('search'),
-        'grados' => Grado::all()->map(fn ($g) => ['id' => $g->id, 'nombre' => $g->nombre]),
-        'docentes' => Docente::all()->map(fn ($d) => ['id' => $d->id, 'nombre' => $d->nombre, 'apellido' => $d->apellido]),
-        'secciones' => Secciones::all()->map(fn ($s) => ['id' => $s->id, 'nombre' => $s->nombre]),
-    ]);
-}
 
     /**
      * Show the form for creating a new resource.
@@ -105,7 +105,21 @@ class EstudianteController extends Controller
      */
     public function update(Request $request, Estudiante $estudiante)
     {
-        //
+        $estudiante = Estudiante::findOrFail($estudiante->id);
+
+        if ($estudiante) {
+            $estudiante->update([
+                'nombre' => $request->nombre,
+                'apellido' => $request->apellido,
+                'especialidad' => $request->especialidad,
+                'fecha_nacimiento' => $request->fecha_nacimiento,
+                'genero' => $request->genero,
+                'cedula' => $request->cedula,
+                'grado_id' => $request->grado_id,
+                'seccion_id' => $request->seccion_id
+            ]);
+        }
+        return redirect()->back()->with('success', 'Estudiante actualizado exitosamente.');
     }
 
     /**

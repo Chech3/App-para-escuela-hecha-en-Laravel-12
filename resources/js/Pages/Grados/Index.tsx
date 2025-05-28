@@ -49,11 +49,11 @@ export default function Index({ grados }: Props) {
             });
         } else {
             router.put(route("grados.update", { id: form.id }), form, {
-                 onSuccess: () => {
+                onSuccess: () => {
                     closeModalAndReset();
                 },
                 onFinish: () => setIsSubmitting(false),
-            })
+            });
         }
     };
 
@@ -183,7 +183,10 @@ export default function Index({ grados }: Props) {
 
                         <Modal
                             show={showModal}
-                            onClose={() => setShowModal(false)}
+                            onClose={() => {
+                                setShowModal(false);
+                                closeModalAndReset();
+                            }}
                             maxWidth="lg"
                         >
                             <form onSubmit={handleSubmit} className="mb-6">

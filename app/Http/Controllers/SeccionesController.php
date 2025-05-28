@@ -87,7 +87,17 @@ class SeccionesController extends Controller
      */
     public function update(Request $request, Secciones $seccione)
     {
-        //
+         $seccione = Secciones::findOrFail($seccione->id);
+
+        if ($seccione) {
+            $seccione->update([
+                'nombre' => $request->nombre,
+                 'grado_id' => $request->grado_id,
+                'docente_id' => $request->docente_id, 
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Sección actualizada correctamente.');
     }
 
     /**

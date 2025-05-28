@@ -72,32 +72,43 @@ class AsistenciaController extends Controller
         return redirect()->back()->with('success', 'Salida registrada correctamente');
     }
 
- public function generarReporte(Request $request)
-{
-    $tipo = $request->input('tipo', 'semanal'); // 'mensual' o 'semanal'
-    $fecha = $request->input('fecha') ?? now()->toDateString();
-    $fechaCarbon = Carbon::parse($fecha);
 
-    if ($tipo === 'semanal') {
-        $inicio = $fechaCarbon->startOfWeek(CarbonInterface::MONDAY)->toDateString();
-        $fin = $fechaCarbon->endOfWeek(CarbonInterface::SUNDAY)->toDateString();
-    } else {
-        $inicio = $fechaCarbon->copy()->startOfMonth()->toDateString();
-        $fin = $fechaCarbon->copy()->endOfMonth()->toDateString();
+
+     public function destroy(Asistencia $asistencia)
+    {
+
+        $asistencia->delete();
+
+        return redirect()->back()->with('success', 'asistencia eliminada exitosamente.');
     }
 
-    $asistencias = Asistencia::with(['docente', 'personalCocina'])
-        ->whereBetween('fecha', [$inicio, $fin])
-        ->get();
+    public function generarReporte(Request $request)
+    {
+        $tipo = $request->input('tipo', 'semanal'); // 'mensual' o 'semanal'
+        $fecha = $request->input('fecha') ?? now()->toDateString();
+        $fechaCarbon = Carbon::parse($fecha);
 
-    $pdf = Pdf::loadView('reportes.asistencias', [
-        'asistencias' => $asistencias,
-        'inicio' => $inicio,
-        'fin' => $fin,
-        'tipo' => $tipo
-    ]);
+        if ($tipo === 'semanal') {
+            $inicio = $fechaCarbon->startOfWeek(CarbonInterface::MONDAY)->toDateString();
+            $fin = $fechaCarbon->endOfWeek(CarbonInterface::SUNDAY)->toDateString();
+        } else {
+            $inicio = $fechaCarbon->copy()->startOfMonth()->toDateString();
+            $fin = $fechaCarbon->copy()->endOfMonth()->toDateString();
+        }
 
-    return $pdf->stream("reporte_asistencias_{$tipo}.pdf");
-}
+        $asistencias = Asistencia::with(['docente', 'personalCocina'])
+            ->whereBetween('fecha', [$inicio, $fin])
+            ->get();
+
+        $pdf = Pdf::loadView('reportes.asistencias', [
+            'asistencias' => $asistencias,
+            'inicio' => $inicio,
+            'fin' => $fin,
+            'tipo' => $tipo
+        ]);
+
+        return $pdf->stream("reporte_asistencias_{$tipo}.pdf");
+    }
+
 
 }
