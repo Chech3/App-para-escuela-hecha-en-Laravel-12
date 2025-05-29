@@ -44,7 +44,7 @@ export default function Index() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
     const [modoEdicion, setModoEdicion] = useState(false);
-    const [showDropdown, setShowDropdown] = useState<boolean>(false);
+    const [activeDropdownId, setActiveDropdownId] = useState<number | null>(null);
     const [form, setForm] = useState({
         nombre: "",
         apellido: "",
@@ -124,12 +124,12 @@ export default function Index() {
     };
 
     useEffect(() => {
-        function handleClickOutside(event: any) {
+        function handleClickOutside(event:any) {
             if (
                 dropdownRef.current &&
                 !dropdownRef.current.contains(event.target)
             ) {
-                setShowDropdown(false);
+                setActiveDropdownId(null);
             }
         }
 
@@ -195,9 +195,9 @@ export default function Index() {
                                         <th className="px-4 py-2 text-left">
                                             Grado
                                         </th>
-                                        <th className="px-4 py-2 text-left">
+                                        {/* <th className="px-4 py-2 text-left">
                                             Sección
-                                        </th>
+                                        </th> */}
                                         <th className="px-4 py-2 text-left">
                                             Acciones
                                         </th>
@@ -221,17 +221,17 @@ export default function Index() {
                                             <td className="px-4 py-2">
                                                 {e.grado.nombre}
                                             </td>
-                                            <td className="px-4 py-2">
+                                            {/* <td className="px-4 py-2">
                                                 {e.seccion.nombre}
-                                            </td>
+                                            </td> */}
                                             <td className="px-4 py-2">
                                                 <div className="relative">
                                                     <div className="flex space-x-2">
                                                         <button
                                                             onClick={() => {
                                                                 handleEdit(e);
-                                                                setShowDropdown(
-                                                                    false
+                                                                setActiveDropdownId(
+                                                                    null
                                                                 );
                                                             }}
                                                             className="flex items-center rounded-md px-2 py-2 bg-yellow-300 hover:bg-yellow-400"
@@ -245,8 +245,11 @@ export default function Index() {
                                                         <button
                                                             className="bg-gray-300 hover:bg-gray-400 px-2 py-2 rounded-md"
                                                             onClick={() =>
-                                                                setShowDropdown(
-                                                                    !showDropdown
+                                                                setActiveDropdownId(
+                                                                    activeDropdownId ===
+                                                                        e.id
+                                                                        ? null
+                                                                        : e.id
                                                                 )
                                                             }
                                                         >
@@ -258,7 +261,8 @@ export default function Index() {
                                                         </button>
                                                     </div>
 
-                                                    {showDropdown && (
+                                                    {activeDropdownId ===
+                                                        e.id && (
                                                         <div
                                                             ref={dropdownRef}
                                                             className="fixed -right-4 mt-2  transform -translate-x-1/2 z-50 bg-white border rounded shadow-lg w-48"
@@ -271,8 +275,8 @@ export default function Index() {
                                                                     setIdM(
                                                                         e.id
                                                                     );
-                                                                    setShowDropdown(
-                                                                        false
+                                                                    setActiveDropdownId(
+                                                                        false || null
                                                                     );
                                                                 }}
                                                                 className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
@@ -290,8 +294,8 @@ export default function Index() {
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 onClick={() =>
-                                                                    setShowDropdown(
-                                                                        false
+                                                                    setActiveDropdownId(
+                                                                        null
                                                                     )
                                                                 }
                                                                 className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
@@ -301,7 +305,8 @@ export default function Index() {
                                                                     alt="Constancia"
                                                                     className="h-4 w-4 mr-2"
                                                                 />
-                                                                Constancia Inscripción
+                                                                Constancia
+                                                                Inscripción
                                                             </a>
 
                                                             <a
@@ -309,8 +314,8 @@ export default function Index() {
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 onClick={() =>
-                                                                    setShowDropdown(
-                                                                        false
+                                                                    setActiveDropdownId(
+                                                                      false || null
                                                                     )
                                                                 }
                                                                 className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
@@ -323,13 +328,13 @@ export default function Index() {
                                                                 Const. Estudio
                                                             </a>
 
-                                                             <a
+                                                            <a
                                                                 href={`/reporte-retiro/${e.id}`}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 onClick={() =>
-                                                                    setShowDropdown(
-                                                                        false
+                                                                    setActiveDropdownId(
+                                                                       false || null
                                                                     )
                                                                 }
                                                                 className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
@@ -339,16 +344,17 @@ export default function Index() {
                                                                     alt="Constancia"
                                                                     className="h-4 w-4 mr-2"
                                                                 />
-                                                                Constancia Retiro
+                                                                Constancia
+                                                                Retiro
                                                             </a>
 
-                                                             <a
+                                                            <a
                                                                 href={`/conducta/${e.id}`}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 onClick={() =>
-                                                                    setShowDropdown(
-                                                                        false
+                                                                    setActiveDropdownId(
+                                                                       false || null
                                                                     )
                                                                 }
                                                                 className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
@@ -358,7 +364,8 @@ export default function Index() {
                                                                     alt="Constancia"
                                                                     className="h-4 w-4 mr-2"
                                                                 />
-                                                                Const. Buena Conducta
+                                                                Const. Buena
+                                                                Conducta
                                                             </a>
                                                         </div>
                                                     )}

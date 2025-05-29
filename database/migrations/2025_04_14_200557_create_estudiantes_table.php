@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('genero');
             $table->integer('cedula')->nullable();
             $table->unsignedBigInteger('grado_id');
-            $table->unsignedBigInteger('seccion_id');
+            $table->unsignedBigInteger('seccion_id')->nullable();
             $table->timestamps();
 
             $table->foreign('grado_id')->references('id')->on('grados')->onDelete('cascade');

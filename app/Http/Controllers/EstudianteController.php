@@ -75,7 +75,7 @@ class EstudianteController extends Controller
             'fecha_nacimiento' => 'required|date',
             'genero' => 'required',
             'grado_id' => 'required|exists:grados,id',
-            'seccion_id' => 'required|exists:secciones,id',
+            // 'seccion_id' => 'required|exists:secciones,id',
         ]);
 
         Estudiante::create($request->all());
