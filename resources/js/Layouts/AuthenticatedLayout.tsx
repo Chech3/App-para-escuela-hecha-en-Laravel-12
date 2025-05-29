@@ -77,7 +77,7 @@ export default function Authenticated({
                                     href={route('personalCocina.index')}
                                     active={route().current('personalCocina.*')}
                                 >
-                                    Personal de Cocina
+                                    Personal
                                 </NavLink>
 
 

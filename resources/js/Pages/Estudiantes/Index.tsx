@@ -412,7 +412,7 @@ export default function Index() {
                                             nombre: e.target.value,
                                         })
                                     }
-                                    maxLength={9}
+                                    maxLength={100}
                                     required
                                 />
                             </div>
@@ -429,7 +429,7 @@ export default function Index() {
                                             apellido: e.target.value,
                                         })
                                     }
-                                    maxLength={9}
+                                    maxLength={100}
                                     required
                                 />
                             </div>
@@ -490,8 +490,8 @@ export default function Index() {
                                     ))}
                                 </select>
                             </div>
-                            <div>
-                                <label htmlFor="">Seccion</label>
+                            {/* <div>
+                                {/* <label htmlFor="">Seccion</label>
                                 <select
                                     className="w-full border rounded px-3 py-2"
                                     value={form.seccion_id}
@@ -513,7 +513,7 @@ export default function Index() {
                                         </option>
                                     ))}
                                 </select>
-                            </div>
+                            </div> */}
 
                             <div>
                                 <label htmlFor="">Cedula Escolar</label>

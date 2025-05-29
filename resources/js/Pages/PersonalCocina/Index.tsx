@@ -9,6 +9,8 @@ interface PersonalCocina {
     id: number;
     nombre: string;
     apellido: string;
+    tipo: string;
+    cedula: string;
 }
 
 interface Props {
@@ -24,8 +26,9 @@ export default function Index({ personal }: Props) {
     const [form, setForm] = useState({
         nombre: "",
         apellido: "",
+        cedula: "",
+        tipo: "",
     });
-
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,6 +47,8 @@ export default function Index({ personal }: Props) {
                     setForm({
                         nombre: "",
                         apellido: "",
+                        cedula: "",
+                        tipo: "",
                     });
                 },
             });
@@ -54,6 +59,8 @@ export default function Index({ personal }: Props) {
         setForm({
             nombre: personal.nombre,
             apellido: personal.apellido,
+            cedula: personal.cedula,
+            tipo: personal.tipo,
         });
         setIdM(personal.id); // <-- guardar ID del docente a editar
         setModoEdicion(true);
@@ -74,6 +81,8 @@ export default function Index({ personal }: Props) {
         setForm({
             nombre: "",
             apellido: "",
+            cedula: "",
+            tipo: "",
         });
         setIdM(null);
         setModoEdicion(false);
@@ -96,7 +105,7 @@ export default function Index({ personal }: Props) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-2xl font-bold">
-                                Listado de Personal de Cocina
+                                Listado del Personal
                             </h1>
 
                             <div className="flex items-center space-x-4">
@@ -131,6 +140,12 @@ export default function Index({ personal }: Props) {
                                         <th className="px-4 py-2 text-left">
                                             Apellido
                                         </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Cedula
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Tipo
+                                        </th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -146,6 +161,12 @@ export default function Index({ personal }: Props) {
 
                                             <td className="px-4 py-2">
                                                 {e.apellido}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {e.cedula}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {e.tipo}
                                             </td>
 
                                             <td className="px-4 py-2 flex justify-center space-x-2">
@@ -183,7 +204,7 @@ export default function Index({ personal }: Props) {
                                 {personal.length === 0 && (
                                     <tbody>
                                         <tr className="text-center py-10">
-                                            <td colSpan={5}>
+                                            <td colSpan={6}>
                                                 <p className="text-2xl text-black py-2">
                                                     No hay registros
                                                 </p>
@@ -205,14 +226,14 @@ export default function Index({ personal }: Props) {
                                 <div className="flex flex-col p-6">
                                     <div>
                                         <label className="py-2 px-2">
-                                            Nombre de la persona
+                                            Nombre
                                         </label>
                                         <TextInput
                                             type="text"
                                             name="nombre"
                                             id="nombre"
                                             className="border rounded px-4 py-2 w-full mb-2"
-                                            placeholder="Nombre del grado"
+                                            placeholder="Nombre "
                                             value={form.nombre}
                                             onChange={(e) =>
                                                 setForm({
@@ -226,7 +247,7 @@ export default function Index({ personal }: Props) {
 
                                     <div>
                                         <label className="py-2 px-2">
-                                            Apellido de la persona
+                                            Apellido
                                         </label>
                                         <TextInput
                                             type="text"
@@ -243,6 +264,52 @@ export default function Index({ personal }: Props) {
                                             }
                                             required
                                         />
+                                    </div>
+
+                                    <div>
+                                        <label className="py-2 px-2">
+                                            Cedula
+                                        </label>
+                                        <TextInput
+                                            type="number"
+                                            name="cedula"
+                                            id="cedula"
+                                            className="border rounded px-4 py-2 w-full mb-2"
+                                            placeholder="cedula"
+                                            value={form.cedula}
+                                            onChange={(e) =>
+                                                setForm({
+                                                    ...form,
+                                                    cedula: e.target.value,
+                                                })
+                                            }
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="py-2 px-2">
+                                            Tipo de Trabajador
+                                        </label>
+
+                                        <select
+                                            value={form.tipo}
+                                            onChange={(e) =>
+                                                setForm({
+                                                    ...form,
+                                                    tipo: e.target.value,
+                                                })
+                                            }
+                                            className="w-full border rounded-md px-3 py-2"
+                                        >
+                                            <option value="Cocinero">
+                                                Cocinero
+                                            </option>
+                                            <option value="Obrero">
+                                                Obrero
+                                            </option>
+                                            <option value="Otro">Otro</option>
+                                        </select>
                                     </div>
 
                                     <div className="flex justify-end gap-2 pt-4">

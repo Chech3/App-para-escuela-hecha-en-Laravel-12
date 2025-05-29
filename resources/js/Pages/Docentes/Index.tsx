@@ -5,6 +5,7 @@ import Modal from "@/Components/Modal";
 import TextInput from "@/Components/TextInput";
 import { convertirHoraAMPM } from "../../utils/ConvertirHora";
 import SearchBar from "../../Components/SearchBar";
+import InputError from "@/Components/InputError";
 export interface Docente {
     id: number;
     nombre: string;
@@ -15,7 +16,7 @@ export interface Docente {
 }
 
 export default function Index() {
-    const { docentes, horarios } = usePage<any>().props;
+    const { docentes, horarios, errors } = usePage<any>().props;
 
     const docentesArray = docentes ?? [];
 
@@ -254,6 +255,8 @@ export default function Index() {
                                     }
                                     required
                                 />
+
+                                 <InputError className="mt-2"  message={errors?.nombre}/>
                             </div>
                             <div>
                                 <label
@@ -274,6 +277,7 @@ export default function Index() {
                                     }
                                     required
                                 />
+                                <InputError className="mt-2"  message={errors?.apellido}/>
                             </div>
                             <div>
                                 <label htmlFor="">Especialidad</label>
@@ -289,6 +293,7 @@ export default function Index() {
                                     }
                                     required
                                 />
+                                <InputError className="mt-2"  message={errors?.especialidad}/>
                             </div>
                             <div>
                                 <label htmlFor="">Correo</label>
@@ -304,6 +309,7 @@ export default function Index() {
                                     }
                                     required
                                 />
+                                <InputError className="mt-2"  message={errors?.correo}/>
                             </div>
                             <div>
                                 <label htmlFor="">Horario</label>
@@ -338,6 +344,7 @@ export default function Index() {
                                         </option>
                                     ))}
                                 </select>
+                                <InputError className="mt-2"  message={errors?.horario_id}/>
                             </div>
                         </div>
 

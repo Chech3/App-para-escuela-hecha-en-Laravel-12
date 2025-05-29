@@ -4,6 +4,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import TextInput from "@/Components/TextInput";
 import Modal from "@/Components/Modal";
 import SearchBar from "@/Components/SearchBar";
+import InputError from "@/Components/InputError";
 
 interface Grado {
     id: number | null;
@@ -20,7 +21,7 @@ export default function Index({ grados }: Props) {
     const [showModalE, setShowModalE] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const { errors } = usePage().props as { errors: Record<string, string> };
     const [form, setForm] = useState<{
         id: number | null;
         nombre: string;
@@ -126,7 +127,7 @@ export default function Index({ grados }: Props) {
                                             Nombre
                                         </th>
 
-                                         <th className="px-4 py-2 text-left">
+                                        <th className="px-4 py-2 text-left">
                                             Tipo
                                         </th>
 
@@ -221,6 +222,11 @@ export default function Index({ grados }: Props) {
                                             }
                                             required
                                         />
+
+                                        <InputError
+                                            className="mt-2"
+                                            message={errors?.nombre}
+                                        />
                                     </div>
 
                                     <select
@@ -238,6 +244,11 @@ export default function Index({ grados }: Props) {
                                         </option>
                                         <option value="Inicial">Inicial</option>
                                     </select>
+
+                                     <InputError
+                                            className="mt-2"
+                                            message={errors?.tipo}
+                                        />
 
                                     <div className="flex justify-end gap-2 pt-4">
                                         <button

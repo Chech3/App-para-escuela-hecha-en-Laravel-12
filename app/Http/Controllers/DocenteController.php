@@ -86,7 +86,7 @@ class DocenteController extends Controller
             $docente->update([
                 'nombre' => $request->nombre,
                 'apellido' => $request->apellido,
-                'correo' => $request->correo ,
+                'correo' => $request->correo,
                 'especialidad' => $request->especialidad,
                 'horario_id' => $request->horario_id
             ]);

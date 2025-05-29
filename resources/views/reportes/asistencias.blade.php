@@ -36,8 +36,16 @@
                             {{ $a->personalCocina?->nombre }} {{ $a->personalCocina?->apellido }}
                         @endif
                     </td>
-                    <td>{{ ucfirst($a->tipo) }}</td>
-                    <td>{{ $a->hora_entrada }}</td>
+                    <td>
+                        @if($a->tipo === 'personal_cocina')
+                        Personal
+
+                        @else
+                        {{ ucfirst($a->tipo) }}
+
+                        @endif
+                    </td>
+                    <td>{{ $a->hora_entrada     }}</td>
                     <td>{{ $a->hora_salida ?? '---' }}</td>
                     <td>{{ $a->observaciones ?? '---' }}</td>
                 </tr>

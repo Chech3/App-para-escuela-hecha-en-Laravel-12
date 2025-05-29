@@ -108,9 +108,6 @@ export default function Index({
         });
     };
 
-
-    
-
     return (
         <AuthenticatedLayout
             header={
@@ -174,7 +171,7 @@ export default function Index({
                                                 Docente
                                             </option>
                                             <option value="personal_cocina">
-                                                Personal Cocina
+                                                Personal
                                             </option>
                                         </select>
                                     </div>
@@ -183,7 +180,7 @@ export default function Index({
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
                                             {data.tipo === "docente"
                                                 ? "Docente"
-                                                : "Personal Cocina"}
+                                                : "Personal"}
                                         </label>
                                         <select
                                             value={data.persona_id}
@@ -311,9 +308,14 @@ export default function Index({
                                                         )}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap capitalize">
-                                                        {asistencia.tipo.replace(
-                                                            "_",
-                                                            " "
+                                                        {asistencia.tipo ===
+                                                            "personal_cocina" && (
+                                                            <p>Personal</p>
+                                                        )}
+
+                                                         {asistencia.tipo !==
+                                                            "personal_cocina" && (
+                                                            <p>Docente</p>
                                                         )}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">

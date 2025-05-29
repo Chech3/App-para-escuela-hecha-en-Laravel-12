@@ -15,5 +15,7 @@ class Personal_cocina extends Model
         'id',
         'nombre',
         'apellido',
+        'cedula',
+        'tipo'
     ];
 }

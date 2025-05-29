@@ -30,6 +30,8 @@ class PersonalCocinaController extends Controller
                 'id' => $personal_cocina->id,
                 'nombre' => $personal_cocina->nombre,
                 'apellido' => $personal_cocina->apellido,
+                'cedula' => $personal_cocina->cedula,
+                'tipo' => $personal_cocina->tipo,
             ];
         });
 
@@ -56,6 +58,8 @@ class PersonalCocinaController extends Controller
         $validated = $request->validate([
             'nombre' => 'required|string|max:25',
             'apellido' => 'required|string|max:25',
+            'cedula' => 'required|string|max:25',
+            'tipo' => 'required|string|max:25',
         ]);
 
         Personal_cocina::create($validated);
@@ -90,9 +94,11 @@ class PersonalCocinaController extends Controller
             $personalCocina->update([
                 'nombre' => $request->nombre,
                 'apellido' => $request->apellido,
+                'cedula' => $request->cedula,
+                'tipo' => $request->tipo,
             ]);
         }
-        return redirect()->back()->with('success', 'Personal de Cocina actualizado exitosamente.');
+        return redirect()->back()->with('success', 'Personal actualizado exitosamente.');
     }
 
     /**

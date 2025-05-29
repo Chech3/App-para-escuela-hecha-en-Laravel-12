@@ -17,7 +17,6 @@ class EstudianteController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search', '');
-
         // Construir consulta con relaciones
         $query = Estudiante::with(['grado', 'seccion'])->orderBy('created_at', 'desc');
 
@@ -50,7 +49,7 @@ class EstudianteController extends Controller
             'filters' => $request->only('search'),
             'grados' => Grado::all()->map(fn($g) => ['id' => $g->id, 'nombre' => $g->nombre]),
             'docentes' => Docente::all()->map(fn($d) => ['id' => $d->id, 'nombre' => $d->nombre, 'apellido' => $d->apellido]),
-            'secciones' => Secciones::all()->map(fn($s) => ['id' => $s->id, 'nombre' => $s->nombre]),
+            // 'secciones' => Secciones::all()->map(fn($s) => ['id' => $s->id, 'nombre' => $s->nombre]),
         ]);
     }
 
@@ -116,7 +115,7 @@ class EstudianteController extends Controller
                 'genero' => $request->genero,
                 'cedula' => $request->cedula,
                 'grado_id' => $request->grado_id,
-                'seccion_id' => $request->seccion_id
+                // 'seccion_id' => $request->seccion_id
             ]);
         }
         return redirect()->back()->with('success', 'Estudiante actualizado exitosamente.');

@@ -1,10 +1,11 @@
-import { Head, router } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import TextInput from "@/Components/TextInput";
 import Modal from "@/Components/Modal";
 import { convertirHoraAMPM } from "../../utils/ConvertirHora";
 import SearchBar from "@/Components/SearchBar";
+import InputError from '../../../../dist/win-unpacked/resources/app.asar.unpacked/resources/.!!0h3/resources/js/Components/InputError';
 interface Horario {
     id: number;
     dia: string;
@@ -25,6 +26,7 @@ export default function Index({ horarios }: Props) {
     const [idM, setIdM] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [modoEdicion, setModoEdicion] = useState(false);
+    const { errors } = usePage().props as { errors: Record<string, string> };
 
     const eliminar = (id: number) => {
         router.delete(route("horarios.destroy", { id }), {
@@ -217,6 +219,8 @@ export default function Index({ horarios }: Props) {
                                             }
                                             required
                                         />
+
+                                        <InputError className="mt-2"  message={errors?.dia}/>
                                     </div>
 
                                     <div>
@@ -230,6 +234,7 @@ export default function Index({ horarios }: Props) {
                                             }
                                             required
                                         />
+                                        <InputError className="mt-2"  message={errors?.horaInicio}/>
                                     </div>
                                     <div>
                                         <label htmlFor="">Hora Final</label>
@@ -242,6 +247,8 @@ export default function Index({ horarios }: Props) {
                                             }
                                             required
                                         />
+
+                                          <InputError className="mt-2"  message={errors?.horaFin}/>
                                     </div>
 
                                     <div className="flex justify-end gap-2 pt-4">
