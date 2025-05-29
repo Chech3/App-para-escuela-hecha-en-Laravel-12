@@ -13,20 +13,23 @@ class ConstanciaController extends Controller
 {
     public function generarConstancia($id)
     {
-        $student = Estudiante::findOrFail($id);
+       $student = Estudiante::findOrFail($id);
         $fecha = now()->format('d/m/Y');
+
+
+       $edad = Carbon::parse($student->fecha_nacimiento)->age;
 
         $data = [
             'student' => $student,
             'fecha' => $fecha,
-            'cedula' => $student->cedula,
-            'numeroConstancia' => 'CONST-' . str_pad($student->id, 5, '0', STR_PAD_LEFT),
+            'director' => ' PROF. JOSÉ MARTINEZ TORRES',
+            'institucion' => 'Unidad Educativa Nacional Simon Rodriguez',
+            'edad' => $edad,
+            'numeroConstancia' => 'EST-' . now()->format('Y') . '-' . str_pad($student->id, 5, '0', STR_PAD_LEFT),
         ];
 
         $pdf = Pdf::loadView('constancia', $data);
-
-
-        return $pdf->stream('constancia-inscripcion-' . $student->id . '.pdf');
+        return $pdf->stream('constancia-inscripcion' . $student->documento . '.pdf');
 
     }
 
@@ -44,7 +47,6 @@ class ConstanciaController extends Controller
             'director' => ' PROF. JOSÉ MARTINEZ TORRES',
             'institucion' => 'Unidad Educativa Nacional Simon Rodriguez',
             'edad' => $edad,
-            'sello' => public_path('/sello.jpg'),
             'numeroConstancia' => 'EST-' . now()->format('Y') . '-' . str_pad($student->id, 5, '0', STR_PAD_LEFT),
         ];
 
@@ -55,18 +57,43 @@ class ConstanciaController extends Controller
 
     public function generarConstanciaRetiro($id)
     {
-        $student = Estudiante::findOrFail($id);
+       $student = Estudiante::findOrFail($id);
         $fecha = now()->format('d/m/Y');
+
+
+       $edad = Carbon::parse($student->fecha_nacimiento)->age;
+
         $data = [
             'student' => $student,
-            'director' => 'Jose Argenis Martinez Torres',
-            'motivo' => 'Cambio de residencia',
             'fecha' => $fecha,
+            'director' => ' PROF. JOSÉ MARTINEZ TORRES',
+            'institucion' => 'Unidad Educativa Nacional Simon Rodriguez',
+            'edad' => $edad,
+            'numeroConstancia' => 'EST-' . now()->format('Y') . '-' . str_pad($student->id, 5, '0', STR_PAD_LEFT),
         ];
 
         $pdf = Pdf::loadView('retiro', $data);
-        return $pdf->stream('constancia_retiro.pdf');
+        return $pdf->stream('constancia-retiro' . $student->documento . '.pdf');
     }
 
+    public function conducta($id)
+    {
+       $student = Estudiante::findOrFail($id);
+        $fecha = now()->format('d/m/Y');
 
+
+       $edad = Carbon::parse($student->fecha_nacimiento)->age;
+
+        $data = [
+            'student' => $student,
+            'fecha' => $fecha,
+            'director' => ' PROF. JOSÉ MARTINEZ TORRES',
+            'institucion' => 'Unidad Educativa Nacional Simon Rodriguez',
+            'edad' => $edad,
+            'numeroConstancia' => 'EST-' . now()->format('Y') . '-' . str_pad($student->id, 5, '0', STR_PAD_LEFT),
+        ];
+
+        $pdf = Pdf::loadView('conducta', $data);
+        return $pdf->stream('constancia-conducta' . $student->documento . '.pdf');
+    }
 }

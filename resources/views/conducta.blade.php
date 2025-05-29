@@ -97,7 +97,7 @@
         </h2>
 
         <div class="title">
-            CONSTANCIA DE ESTUDIO
+            CONSTANCIA DE BUENA CONDUCTA
         </div>
 
         <div class="content">
@@ -110,10 +110,11 @@
             el (la) estudiante: <strong>{{ strtoupper($student->nombre) }}
                 {{ strtoupper($student->apellido) }}</strong>,
             Cédula Escolar <span class="efecto">{{ $student->cedula }}</span>, de <span
-                class="efecto">{{ $edad }} </span> años , cursa estudios de
-            <span class="efecto">
+                class="efecto">{{ $edad }} </span> años, cursó el
+                 <span class="efecto">
                 {{ $student->grado->nombre }}
-            </span>
+            </span> grado
+           
             de Educación
             <span class="efecto">
                 {{ $student->grado->tipo }}
@@ -121,8 +122,12 @@
             ,en la Unidad Educativa Nacional "SIMON RODRIGUEZ", código
             plantel:
             <span class="efecto">
-                OD09401109.
-            </span>
+                OD09401109
+            </span>, y durante su permanencia se observó
+            <span class="efecto">
+                BUENA CONDUCTA.
+
+                </span> 
         </div>
 
         <div class="content">

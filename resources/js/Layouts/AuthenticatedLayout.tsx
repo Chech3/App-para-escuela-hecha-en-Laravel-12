@@ -20,7 +20,7 @@ export default function Authenticated({
         useState(false);
 
     return (
-        <section style={{backgroundImage: `url("/escuela.jpg")` }} className="min-h-screen bg-cover bg-no-repeat bg-[center_-100%]">
+        <section style={{backgroundImage: `url("/escuela.jpeg")` }} className="min-h-screen bg-cover bg-no-repeat bg-[center_-100%]">
             <ToastHandler />
             <nav  className="border-b border-gray-100 bg-gray-300">
                 <div  className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

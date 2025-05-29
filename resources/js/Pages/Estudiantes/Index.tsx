@@ -226,37 +226,37 @@ export default function Index() {
                                             </td>
                                             <td className="px-4 py-2">
                                                 <div className="relative">
-                                                <div className="flex space-x-2">
-                                                    <button
-                                                        onClick={() => {
-                                                            handleEdit(e);
-                                                            setShowDropdown(
-                                                                false
-                                                            );
-                                                        }}
-                                                        className="flex items-center rounded-md px-2 py-2 bg-yellow-300 hover:bg-yellow-400"
-                                                    >
-                                                        <img
-                                                            src="/edit.svg"
-                                                            alt="Editar"
-                                                            className="h-4 w-4"
-                                                        />
-                                                    </button>
-                                                    <button
-                                                        className="bg-gray-300 hover:bg-gray-400 px-2 py-2 rounded-md"
-                                                        onClick={() =>
-                                                            setShowDropdown(
-                                                                !showDropdown
-                                                            )
-                                                        }
-                                                    >
-                                                        <img
-                                                            src="/more.svg"
-                                                            alt="Más opciones"
-                                                            className="h-4 w-4 backdrop-invert-0 rounded-md"
-                                                        />
-                                                    </button>
-                                                </div>
+                                                    <div className="flex space-x-2">
+                                                        <button
+                                                            onClick={() => {
+                                                                handleEdit(e);
+                                                                setShowDropdown(
+                                                                    false
+                                                                );
+                                                            }}
+                                                            className="flex items-center rounded-md px-2 py-2 bg-yellow-300 hover:bg-yellow-400"
+                                                        >
+                                                            <img
+                                                                src="/edit.svg"
+                                                                alt="Editar"
+                                                                className="h-4 w-4"
+                                                            />
+                                                        </button>
+                                                        <button
+                                                            className="bg-gray-300 hover:bg-gray-400 px-2 py-2 rounded-md"
+                                                            onClick={() =>
+                                                                setShowDropdown(
+                                                                    !showDropdown
+                                                                )
+                                                            }
+                                                        >
+                                                            <img
+                                                                src="/more.svg"
+                                                                alt="Más opciones"
+                                                                className="h-4 w-4 backdrop-invert-0 rounded-md"
+                                                            />
+                                                        </button>
+                                                    </div>
 
                                                     {showDropdown && (
                                                         <div
@@ -301,7 +301,7 @@ export default function Index() {
                                                                     alt="Constancia"
                                                                     className="h-4 w-4 mr-2"
                                                                 />
-                                                                Constancia
+                                                                Constancia Inscripción
                                                             </a>
 
                                                             <a
@@ -321,6 +321,44 @@ export default function Index() {
                                                                     className="h-4 w-4 mr-2"
                                                                 />
                                                                 Const. Estudio
+                                                            </a>
+
+                                                             <a
+                                                                href={`/reporte-retiro/${e.id}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                onClick={() =>
+                                                                    setShowDropdown(
+                                                                        false
+                                                                    )
+                                                                }
+                                                                className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
+                                                            >
+                                                                <img
+                                                                    src="/print.svg"
+                                                                    alt="Constancia"
+                                                                    className="h-4 w-4 mr-2"
+                                                                />
+                                                                Constancia Retiro
+                                                            </a>
+
+                                                             <a
+                                                                href={`/conducta/${e.id}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                onClick={() =>
+                                                                    setShowDropdown(
+                                                                        false
+                                                                    )
+                                                                }
+                                                                className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
+                                                            >
+                                                                <img
+                                                                    src="/print.svg"
+                                                                    alt="Constancia"
+                                                                    className="h-4 w-4 mr-2"
+                                                                />
+                                                                Const. Buena Conducta
                                                             </a>
                                                         </div>
                                                     )}
