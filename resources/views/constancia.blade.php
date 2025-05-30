@@ -25,7 +25,7 @@
 
         .content {
             margin: 80px 0;
-            text-align: center;
+            text-align: justify;
             font-size: 18px
         }
 
