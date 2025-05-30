@@ -5,7 +5,8 @@ import TextInput from "@/Components/TextInput";
 import Modal from "@/Components/Modal";
 import { convertirHoraAMPM } from "../../utils/ConvertirHora";
 import SearchBar from "@/Components/SearchBar";
-import InputError from '../../../../dist/win-unpacked/resources/app.asar.unpacked/resources/.!!0h3/resources/js/Components/InputError';
+import InputError from "@/Components/InputError";
+
 interface Horario {
     id: number;
     dia: string;
