@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->string('nombre');
             $table->enum('tipo', ['Primaria', 'Inicial'])->default('Primaria');
             $table->timestamps();
+
+            $table->softDeletes();
         });
     }
 
@@ -23,6 +25,9 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('grados');
+        Schema::table('grados', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
+
     }
 };

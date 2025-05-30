@@ -18,6 +18,8 @@ return new class extends Migration
             $table->time('hora_inicio');
             $table->time('hora_fin');
             $table->timestamps();
+
+             $table->softDeletes();
         });
     }
 
@@ -26,6 +28,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('horarios');
+        Schema::table('horarios', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 };

@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,11 +14,14 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('apellido');
-            $table->string('especialidad')->nullable();
+            $table->string('cedula');
+            $table->string('numero')->nullable();
             $table->string('correo')->unique();
             $table->timestamps();
 
             $table->foreignId('horario_id')->nullable()->constrained('horarios');
+
+            $table->softDeletes();
         });
     }
 
@@ -28,6 +30,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('docentes');
+        Schema::table('docentes', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 };

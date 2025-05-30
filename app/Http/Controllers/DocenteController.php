@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Docente;
 use App\Models\Horario;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -31,9 +32,10 @@ class DocenteController extends Controller
                 'id' => $docente->id,
                 'nombre' => $docente->nombre,
                 'apellido' => $docente->apellido,
+                'cedula' => $docente->cedula,
+                'numero' => $docente->numero,
                 'correo' => $docente->correo,
                 'horario' => $docente->horario,
-                'especialidad' => $docente->especialidad,
             ];
         });
 
@@ -51,6 +53,7 @@ class DocenteController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'apellido' => 'required|string|max:255',
+            'cedula' => 'required|string|max:255',
             'correo' => 'required|email|max:255|unique:docentes,correo',
         ]);
 
@@ -59,25 +62,7 @@ class DocenteController extends Controller
         return redirect()->route('docente.index')->with('success', 'Docente creado correctamente');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Docente $docente)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Docente $docente)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Docente $docente)
     {
         $docente = Docente::findOrFail($docente->id);
@@ -86,8 +71,9 @@ class DocenteController extends Controller
             $docente->update([
                 'nombre' => $request->nombre,
                 'apellido' => $request->apellido,
+                'cedula' => $request->cedula,
                 'correo' => $request->correo,
-                'especialidad' => $request->especialidad,
+                'numero' => $request->numero,
                 'horario_id' => $request->horario_id
             ]);
         }
@@ -115,5 +101,15 @@ class DocenteController extends Controller
         $docente->delete();
 
         return redirect()->route('docente.index')->with('success', 'Docente eliminado con éxito.');
+    }
+
+    public function generarReporte()
+    {
+        $docentes = Docente::all();
+
+        $pdf = Pdf::loadView('reportes.docentes', compact('docentes'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('reporte_docentes.pdf');
     }
 }

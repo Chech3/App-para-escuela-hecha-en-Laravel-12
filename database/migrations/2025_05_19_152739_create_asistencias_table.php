@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->foreignId('personal_id')->nullable()->constrained('personal_cocinas');
             $table->string('observaciones')->nullable();
             $table->timestamps();
+             $table->softDeletes();
         });
     }
 
@@ -29,6 +30,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('asistencias');
+          Schema::table('asistencias', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });   
     }
 };

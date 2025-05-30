@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Docente extends Model
 {
     use HasFactory;
-
+    use SoftDeletes;
     protected $table = 'docentes';
 
     protected $fillable = [
@@ -16,7 +17,8 @@ class Docente extends Model
         'nombre',
         'apellido',
         'correo',
-        'especialidad',
+        'cedula',
+        'numero',
         'horario_id'
     ];
     public function secciones()

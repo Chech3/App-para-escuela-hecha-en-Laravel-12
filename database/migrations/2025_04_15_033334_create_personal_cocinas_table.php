@@ -14,15 +14,20 @@ return new class extends Migration {
             $table->id();
             $table->string('nombre');
             $table->string('apellido');
-             $table->string('cedula');
-              $table->string('tipo');
+            $table->string('cedula');
+            $table->string('tipo');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
-    
+
     public function down(): void
     {
-        Schema::dropIfExists('personal_cocinas');
+
+        Schema::table('personal_cocinas', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
+
     }
 };

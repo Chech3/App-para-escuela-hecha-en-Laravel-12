@@ -23,6 +23,7 @@ return new class extends Migration {
 
             $table->foreign('grado_id')->references('id')->on('grados')->onDelete('cascade');
             $table->foreign('seccion_id')->references('id')->on('secciones')->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 
@@ -31,6 +32,9 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('estudiantes');
+        Schema::table('estudiantes', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
+
     }
 };

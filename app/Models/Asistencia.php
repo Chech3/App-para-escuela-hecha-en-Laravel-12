@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Asistencia extends Model
 {
+      use SoftDeletes;
     protected $fillable = [
         'fecha',
         'hora_entrada',

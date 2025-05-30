@@ -10,7 +10,8 @@ export interface Docente {
     id: number;
     nombre: string;
     apellido: string;
-    especialidad: string;
+    cedula: string;
+    numero: string;
     correo: string;
     horario: any;
 }
@@ -28,7 +29,8 @@ export default function Index() {
     const [form, setForm] = useState({
         nombre: "",
         apellido: "",
-        especialidad: "",
+        cedula: "",
+        numero: "",
         correo: "",
         horario_id: "",
     });
@@ -65,7 +67,8 @@ export default function Index() {
         setForm({
             nombre: "",
             apellido: "",
-            especialidad: "",
+            cedula: "",
+            numero: "",
             correo: "",
             horario_id: "",
         });
@@ -79,12 +82,13 @@ export default function Index() {
         setForm({
             nombre: docente.nombre,
             apellido: docente.apellido,
-            especialidad: docente.especialidad,
+            cedula: docente.cedula,
+            numero: docente.numero,
             correo: docente.correo,
             horario_id: docente.horario ? docente.horario.id : "",
         });
         setIdM(docente.id); // <-- guardar ID del docente a editar
-        setModoEdicion(true); 
+        setModoEdicion(true);
         setShowModal(true);
     };
 
@@ -107,9 +111,17 @@ export default function Index() {
                             </h1>
 
                             <div className="flex gap-4">
+                                <a
+                                    href="http://localhost:8000/reporte-docentes"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-4 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+                                >
+                                    Generar Reporte
+                                </a>
                                 <button
                                     onClick={() => setShowModal(true)}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                    className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
                                 >
                                     Agregar Docente
                                 </button>
@@ -137,13 +149,13 @@ export default function Index() {
                                             Apellido
                                         </th>
                                         <th className="px-4 py-2 text-left">
-                                            Especialidad
+                                            Número
                                         </th>
                                         <th className="px-4 py-2 text-left">
                                             Horario
                                         </th>
                                         <th className="px-4 py-2 text-left">
-                                            Correo
+                                            Cedula
                                         </th>
                                         <th className="px-4 py-2 text-left">
                                             Acciones
@@ -160,7 +172,7 @@ export default function Index() {
                                                 {e.apellido}
                                             </td>
                                             <td className="px-4 py-2">
-                                                {e.especialidad}
+                                                {e.numero}
                                             </td>
                                             <td className="px-4 py-2">
                                                 {e.horario
@@ -174,7 +186,7 @@ export default function Index() {
                                                     : "Sin horario"}
                                             </td>
                                             <td className="px-4 py-2">
-                                                {e.correo}
+                                                {e.cedula}
                                             </td>
                                             <td className="px-4 py-2 flex gap-2">
                                                 <button
@@ -227,7 +239,9 @@ export default function Index() {
             {/* Modal de Agregar Docente */}
             <Modal
                 show={showModal}
-                onClose={() => {setShowModal(false), resetForm()}}
+                onClose={() => {
+                    setShowModal(false), resetForm();
+                }}
                 maxWidth="lg"
             >
                 <div className="p-6">
@@ -256,7 +270,10 @@ export default function Index() {
                                     required
                                 />
 
-                                 <InputError className="mt-2"  message={errors?.nombre}/>
+                                <InputError
+                                    className="mt-2"
+                                    message={errors?.nombre}
+                                />
                             </div>
                             <div>
                                 <label
@@ -277,23 +294,53 @@ export default function Index() {
                                     }
                                     required
                                 />
-                                <InputError className="mt-2"  message={errors?.apellido}/>
+                                <InputError
+                                    className="mt-2"
+                                    message={errors?.apellido}
+                                />
                             </div>
                             <div>
-                                <label htmlFor="">Especialidad</label>
+                                <label
+                                    htmlFor="cedula"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Cedula
+                                </label>
                                 <TextInput
                                     type="text"
-                                    placeholder="Especialidad"
-                                    value={form.especialidad}
+                                    placeholder="cedula"
+                                    value={form.cedula}
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            especialidad: e.target.value,
+                                            cedula: e.target.value,
                                         })
                                     }
                                     required
                                 />
-                                <InputError className="mt-2"  message={errors?.especialidad}/>
+                                <InputError
+                                    className="mt-2"
+                                    message={errors?.cedula}
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="">Numero</label>
+                                <TextInput
+                                    type="number"
+                                    placeholder="Numero"
+                                    value={form.numero}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            numero: e.target.value,
+                                        })
+                                    }
+                                    required
+                                />
+                                <InputError
+                                    className="mt-2"
+                                    message={errors?.numero}
+                                />
                             </div>
                             <div>
                                 <label htmlFor="">Correo</label>
@@ -309,7 +356,10 @@ export default function Index() {
                                     }
                                     required
                                 />
-                                <InputError className="mt-2"  message={errors?.correo}/>
+                                <InputError
+                                    className="mt-2"
+                                    message={errors?.correo}
+                                />
                             </div>
                             <div>
                                 <label htmlFor="">Horario</label>
@@ -344,7 +394,10 @@ export default function Index() {
                                         </option>
                                     ))}
                                 </select>
-                                <InputError className="mt-2"  message={errors?.horario_id}/>
+                                <InputError
+                                    className="mt-2"
+                                    message={errors?.horario_id}
+                                />
                             </div>
                         </div>
 
