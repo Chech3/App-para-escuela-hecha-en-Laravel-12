@@ -235,6 +235,7 @@ export default function Index({ personal }: Props) {
                                             className="border rounded px-4 py-2 w-full mb-2"
                                             placeholder="Nombre "
                                             value={form.nombre}
+                                            maxLength={25}
                                             onChange={(e) =>
                                                 setForm({
                                                     ...form,
@@ -255,6 +256,7 @@ export default function Index({ personal }: Props) {
                                             id="apellido"
                                             className="border rounded px-4 py-2 w-full mb-2"
                                             placeholder="Apellido"
+                                            maxLength={25}
                                             value={form.apellido}
                                             onChange={(e) =>
                                                 setForm({
@@ -277,12 +279,18 @@ export default function Index({ personal }: Props) {
                                             className="border rounded px-4 py-2 w-full mb-2"
                                             placeholder="cedula"
                                             value={form.cedula}
-                                            onChange={(e) =>
-                                                setForm({
-                                                    ...form,
-                                                    cedula: e.target.value,
-                                                })
-                                            }
+                                            onChange={(e) => {
+                                                if (
+                                                    e.target.value.length > 9
+                                                ) {
+                                                    return;
+                                                } else {
+                                                    setForm({
+                                                        ...form,
+                                                        cedula: e.target.value,
+                                                    });
+                                                }
+                                            }}
                                             required
                                         />
                                     </div>
