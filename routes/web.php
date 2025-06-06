@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdministrativoController;
 use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\ConstanciaController;
 use App\Http\Controllers\DocenteController;
@@ -42,6 +43,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('secciones', SeccionesController::class)->names(['secciones']);
     Route::resource('docente', DocenteController::class)->names(['profesores']);
+    Route::resource('administrativo', AdministrativoController::class)->names(['administrativo']);
     Route::get('/reporte-docentes', [DocenteController::class, 'generarReporte'])->name('docentes.reporte');
     Route::resource('horarios', HorarioController::class)->names(['horarios']);
     Route::resource('personalCocina', PersonalCocinaController::class)->names(['personal_cocina']);

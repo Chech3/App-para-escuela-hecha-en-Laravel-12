@@ -3,24 +3,23 @@ import { Head, usePage, router } from "@inertiajs/react";
 import { useState } from "react";
 import Modal from "@/Components/Modal";
 import TextInput from "@/Components/TextInput";
-import { convertirHoraAMPM } from "../../utils/ConvertirHora";
 import SearchBar from "../../Components/SearchBar";
 import InputError from "@/Components/InputError";
-export interface Docente {
+
+export interface Personal {
     id: number;
     nombre: string;
     apellido: string;
     cedula: string;
     numero: string;
     correo: string;
-    especialidad: string;
-    horario: any;
+    cargo: any;
 }
 
 export default function Index() {
-    const { docentes, horarios, errors } = usePage<any>().props;
+    const { personal, errors } = usePage<any>().props;
 
-    const docentesArray = docentes ?? [];
+    const personalArray = personal ?? [];
 
     const [showModalE, setShowModalE] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -31,14 +30,14 @@ export default function Index() {
         nombre: "",
         apellido: "",
         cedula: "",
-        especialidad: "",
+        // especialidad: "",
         numero: "",
         correo: "",
-        horario_id: "",
+        cargo: "",
     });
 
     const eliminar = (id: number) => {
-        router.delete(route(`docente.destroy`, { id }), {
+        router.delete(route(`administrativo.destroy`, { id }), {
             onSuccess: () => {
                 setShowModalE(false);
                 setIdM(null);
@@ -51,13 +50,13 @@ export default function Index() {
         setIsSubmitting(true);
 
         if (modoEdicion && idM !== null) {
-            router.put(route("docente.update", { id: idM }), form, {
+            router.put(route("administrativo.update", { id: idM }), form, {
                 onSuccess: () => {
                     resetForm();
                 },
             });
         } else {
-            router.post(route("docente.store"), form, {
+            router.post(route("administrativo.store"), form, {
                 onSuccess: () => {
                     resetForm();
                 },
@@ -70,10 +69,10 @@ export default function Index() {
             nombre: "",
             apellido: "",
             cedula: "",
-            especialidad: "",
+            // especialidad: "",
             numero: "",
             correo: "",
-            horario_id: "",
+            cargo: "",
         });
         setIdM(null);
         setModoEdicion(false);
@@ -81,17 +80,17 @@ export default function Index() {
         setIsSubmitting(false);
     };
 
-    const handleEdit = (docente: Docente) => {
+    const handleEdit = (personal: Personal) => {
         setForm({
-            nombre: docente.nombre,
-            apellido: docente.apellido,
-            cedula: docente.cedula,
-            especialidad: docente.especialidad,
-            numero: docente.numero,
-            correo: docente.correo,
-            horario_id: docente.horario ? docente.horario.id : "",
+            nombre: personal.nombre,
+            apellido: personal.apellido,
+            cedula: personal.cedula,
+            // especialidad: personal.especialidad,
+            numero: personal.numero,
+            correo: personal.correo,
+            cargo: personal.cargo,
         });
-        setIdM(docente.id); // <-- guardar ID del docente a editar
+        setIdM(personal.id); 
         setModoEdicion(true);
         setShowModal(true);
     };
@@ -100,39 +99,31 @@ export default function Index() {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Docentes
+                    Personal Administrativo
                 </h2>
             }
         >
-            <Head title="Docentes" />
+            <Head title="Personal" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-2xl font-bold">
-                                Listado de Docentes
+                                Personal Administrativo
                             </h1>
 
                             <div className="flex gap-4">
-                                <a
-                                    href="http://localhost:8000/reporte-docentes"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="px-4 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-                                >
-                                    Generar Reporte
-                                </a>
                                 <button
                                     onClick={() => setShowModal(true)}
                                     className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
                                 >
-                                    Agregar Docente
+                                    Agregar Personal
                                 </button>
 
                                 <SearchBar
-                                    routeName="docente.index"
-                                    placeholder="Buscar docente..."
+                                    routeName="administrativo.index"
+                                    placeholder="Buscar Personal..."
                                     initialValue={
                                         new URLSearchParams(
                                             window.location.search
@@ -155,14 +146,12 @@ export default function Index() {
                                         <th className="px-4 py-2 text-left">
                                             Número
                                         </th>
+                                       
                                         <th className="px-4 py-2 text-left">
-                                            Horario
+                                            Cargo
                                         </th>
                                         <th className="px-4 py-2 text-left">
                                             Cedula
-                                        </th>
-                                        <th className="px-4 py-2 text-left">
-                                            Especialidad
                                         </th>
                                         <th className="px-4 py-2 text-left">
                                             Acciones
@@ -170,7 +159,7 @@ export default function Index() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {docentesArray.map((e: Docente) => (
+                                    {personalArray.map((e: Personal) => (
                                         <tr key={e.id}>
                                             <td className="px-4 py-2">
                                                 {e.nombre}
@@ -182,21 +171,10 @@ export default function Index() {
                                                 {e.numero}
                                             </td>
                                             <td className="px-4 py-2">
-                                                {e.horario
-                                                    ? convertirHoraAMPM(
-                                                          e.horario.hora_inicio
-                                                      ) +
-                                                      " - " +
-                                                      convertirHoraAMPM(
-                                                          e.horario.hora_fin
-                                                      )
-                                                    : "Sin horario"}
+                                                {e.cargo}
                                             </td>
                                             <td className="px-4 py-2">
                                                 {e.cedula}
-                                            </td>
-                                            <td className="px-4 py-2">
-                                                {e.especialidad}
                                             </td>
                                             <td className="px-4 py-2 flex gap-2">
                                                 <button
@@ -229,10 +207,10 @@ export default function Index() {
                                         </tr>
                                     ))}
                                 </tbody>
-                                {docentesArray.length === 0 && (
+                                {personalArray.length === 0 && (
                                     <tbody className="text-center py-10">
                                         <tr>
-                                            <td colSpan={6} className="py-10">
+                                            <td colSpan={7} className="py-10">
                                                 <p className="text-2xl text-black text-center">
                                                     No hay registros
                                                 </p>
@@ -256,7 +234,7 @@ export default function Index() {
             >
                 <div className="p-6">
                     <h2 className="text-lg font-semibold mb-4">
-                        Agregar Docente
+                        Agregar Personal
                     </h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -339,35 +317,6 @@ export default function Index() {
                             </div>
 
                             <div>
-                                <label htmlFor="">Especialidad</label>
-                                <select
-                                    value={form.especialidad}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
-                                            especialidad: e.target.value,
-                                        })
-                                    }
-                                    required
-                                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                                >
-                                    <option value="">Seleccione</option>
-                                    <option value="Docente especialista">
-                                        Docente Especialista
-                                    </option>
-                                    <option value="Asesor pedagógico ">
-                                        Asesor pedagógico
-                                    </option>
-                                    <option value="Docentes de aula ">
-                                        Docentes de aula{" "}
-                                    </option>
-                                </select>
-                                <InputError
-                                    className="mt-2"
-                                    message={errors?.cargo}
-                                />
-                            </div>
-                            <div>
                                 <label htmlFor="">Numero</label>
                                 <TextInput
                                     type="number"
@@ -410,41 +359,27 @@ export default function Index() {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="">Horario</label>
+                                <label htmlFor="">Cargo</label>
                                 <select
-                                    value={form.horario_id}
+                                    value={form.cargo}
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            horario_id: e.target.value,
+                                            cargo: e.target.value,
                                         })
                                     }
                                     required
                                     className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 >
                                     <option value="">
-                                        Selecciona un horario
+                                        Selecciona un cargo
                                     </option>
-                                    {horarios.map((horario: any) => (
-                                        <option
-                                            key={horario.id}
-                                            value={horario.id}
-                                        >
-                                            {horario.nombre} (
-                                            {convertirHoraAMPM(
-                                                horario.hora_inicio
-                                            )}
-                                            -{" "}
-                                            {convertirHoraAMPM(
-                                                horario.hora_fin
-                                            )}
-                                            )
-                                        </option>
-                                    ))}
+                                    <option value="Director">Director</option>
+                                    <option value="Personal Administrativo">Personal Administrativo</option>
                                 </select>
                                 <InputError
                                     className="mt-2"
-                                    message={errors?.horario_id}
+                                    message={errors?.cargo}
                                 />
                             </div>
                         </div>
@@ -476,7 +411,7 @@ export default function Index() {
             >
                 <div className="p-6">
                     <p>
-                        Estas seguro que deseas eliminar este docente? Esta
+                        Estas seguro que deseas eliminar este Personal? Esta
                         acción no se puede deshacer.
                     </p>
                     <div className="flex justify-end gap-2 pt-4">

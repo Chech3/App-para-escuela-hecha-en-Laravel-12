@@ -2,27 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Administrativo;
 use App\Models\Estudiante;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use DateTime;
-use Illuminate\Http\Request;
 
 class ConstanciaController extends Controller
 {
     public function generarConstancia($id)
     {
-       $student = Estudiante::findOrFail($id);
+        $student = Estudiante::findOrFail($id);
         $fecha = now()->format('d/m/Y');
+        $director = Administrativo::where('cargo', 'Director')->first();
 
 
-       $edad = Carbon::parse($student->fecha_nacimiento)->age;
+        $directorData = [
+            'nombre' => $director ? $director->nombre : 'JOSÉ',
+            'apellido' => $director ? $director->apellido : 'MARTINEZ TORRES',
+            'cedula' => $director ? $director->cedula : 'V-17.666.104',
+            'telefono' => $director ? $director->numero : '0412-6669403',
+            'nombre_completo' => $director ? ($director->nombre . ' ' . $director->apellido) : 'PROF. JOSÉ MARTINEZ TORRES',
+        ];
+        $edad = Carbon::parse($student->fecha_nacimiento)->age;
+
 
         $data = [
             'student' => $student,
             'fecha' => $fecha,
-            'director' => ' PROF. JOSÉ MARTINEZ TORRES',
+            'director' => $directorData,
             'institucion' => 'Unidad Educativa Nacional Simon Rodriguez',
             'edad' => $edad,
             'numeroConstancia' => 'EST-' . now()->format('Y') . '-' . str_pad($student->id, 5, '0', STR_PAD_LEFT),
@@ -37,14 +45,22 @@ class ConstanciaController extends Controller
     {
         $student = Estudiante::findOrFail($id);
         $fecha = now()->format('d/m/Y');
+        $director = Administrativo::where('cargo', 'Director')->first();
 
+        $directorData = [
+            'nombre' => $director ? $director->nombre : 'JOSÉ',
+            'apellido' => $director ? $director->apellido : 'MARTINEZ TORRES',
+            'cedula' => $director ? $director->cedula : 'V-17.666.104',
+            'telefono' => $director ? $director->numero : '0412-6669403',
+            'nombre_completo' => $director ? ($director->nombre . ' ' . $director->apellido) : 'PROF. JOSÉ MARTINEZ TORRES',
+        ];
 
-       $edad = Carbon::parse($student->fecha_nacimiento)->age;
+        $edad = Carbon::parse($student->fecha_nacimiento)->age;
 
         $data = [
             'student' => $student,
             'fecha' => $fecha,
-            'director' => ' PROF. JOSÉ MARTINEZ TORRES',
+            'director' => $directorData,
             'institucion' => 'Unidad Educativa Nacional Simon Rodriguez',
             'edad' => $edad,
             'numeroConstancia' => 'EST-' . now()->format('Y') . '-' . str_pad($student->id, 5, '0', STR_PAD_LEFT),
@@ -57,16 +73,24 @@ class ConstanciaController extends Controller
 
     public function generarConstanciaRetiro($id)
     {
-       $student = Estudiante::findOrFail($id);
+        $student = Estudiante::findOrFail($id);
         $fecha = now()->format('d/m/Y');
+        $director = Administrativo::where('cargo', 'Director')->first();
 
+       $directorData = [
+            'nombre' => $director ? $director->nombre : 'JOSÉ',
+            'apellido' => $director ? $director->apellido : 'MARTINEZ TORRES',
+            'cedula' => $director ? $director->cedula : 'V-17.666.104',
+            'telefono' => $director ? $director->numero : '0412-6669403',
+            'nombre_completo' => $director ? ($director->nombre . ' ' . $director->apellido) : 'PROF. JOSÉ MARTINEZ TORRES',
+        ];
 
-       $edad = Carbon::parse($student->fecha_nacimiento)->age;
+        $edad = Carbon::parse($student->fecha_nacimiento)->age;
 
         $data = [
             'student' => $student,
             'fecha' => $fecha,
-            'director' => ' PROF. JOSÉ MARTINEZ TORRES',
+            'director' => $directorData,
             'institucion' => 'Unidad Educativa Nacional Simon Rodriguez',
             'edad' => $edad,
             'numeroConstancia' => 'EST-' . now()->format('Y') . '-' . str_pad($student->id, 5, '0', STR_PAD_LEFT),
@@ -78,16 +102,24 @@ class ConstanciaController extends Controller
 
     public function conducta($id)
     {
-       $student = Estudiante::findOrFail($id);
+        $student = Estudiante::findOrFail($id);
         $fecha = now()->format('d/m/Y');
+        $edad = Carbon::parse($student->fecha_nacimiento)->age;
 
+        $director = Administrativo::where('cargo', 'Director')->first();
 
-       $edad = Carbon::parse($student->fecha_nacimiento)->age;
+       $directorData = [
+            'nombre' => $director ? $director->nombre : 'JOSÉ',
+            'apellido' => $director ? $director->apellido : 'MARTINEZ TORRES',
+            'cedula' => $director ? $director->cedula : 'V-17.666.104',
+            'telefono' => $director ? $director->numero : '0412-6669403',
+            'nombre_completo' => $director ? ($director->nombre . ' ' . $director->apellido) : 'PROF. JOSÉ MARTINEZ TORRES',
+        ];
 
         $data = [
             'student' => $student,
             'fecha' => $fecha,
-            'director' => ' PROF. JOSÉ MARTINEZ TORRES',
+            'director' => $directorData,
             'institucion' => 'Unidad Educativa Nacional Simon Rodriguez',
             'edad' => $edad,
             'numeroConstancia' => 'EST-' . now()->format('Y') . '-' . str_pad($student->id, 5, '0', STR_PAD_LEFT),

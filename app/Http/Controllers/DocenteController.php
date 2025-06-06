@@ -33,6 +33,7 @@ class DocenteController extends Controller
                 'nombre' => $docente->nombre,
                 'apellido' => $docente->apellido,
                 'cedula' => $docente->cedula,
+                'especialidad' => $docente->especialidad,
                 'numero' => $docente->numero,
                 'correo' => $docente->correo,
                 'horario' => $docente->horario,
@@ -73,6 +74,7 @@ class DocenteController extends Controller
                 'apellido' => $request->apellido,
                 'cedula' => $request->cedula,
                 'correo' => $request->correo,
+                'especialidad' => $request->especialidad,
                 'numero' => $request->numero,
                 'horario_id' => $request->horario_id
             ]);

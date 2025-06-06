@@ -101,9 +101,9 @@
         </div>
 
         <div class="content">
-            Quien suscribe, <span class="efecto">{{ $director }}
+            Quien suscribe, <span class="efecto">{{ $director['nombre_completo'] }}
             </span> Titular de la cédula de
-            identidad <span class="efecto">N° V-17.666.104,
+            identidad <span class="efecto">{{ $director['cedula'] }}
             </span> en mi condición de Director (E) de la Unidad Educativa
             Nacional SIMON RODRIGUEZ, ubicada en Pitahaya, Parroquia Buena Vista,
             Municipio Falcón, Estado Falcón, por medio de la presente HAGO CONSTAR que
@@ -141,9 +141,9 @@
 
         <div class="signature">
             <p>_________________________</p>
-            <p><strong>{{ $director }}</strong></p>
+            <p><strong>{{ $director['nombre_completo'] }}</strong></p>
             <p>Director(a)</p>
-            <p style="font-weight: bold; margin: 0;">N° Telf.: 0412-6669403</p>
+            <p style="font-weight: bold; margin: 0;">N° Telf.: {{ $director['telefono'] }}</p>
         </div>
 
         <div class="footer">

@@ -44,7 +44,9 @@ export default function Index() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [idM, setIdM] = useState<number | null>(null);
     const [modoEdicion, setModoEdicion] = useState(false);
-    const [activeDropdownId, setActiveDropdownId] = useState<number | null>(null);
+    const [activeDropdownId, setActiveDropdownId] = useState<number | null>(
+        null
+    );
     const [form, setForm] = useState({
         nombre: "",
         apellido: "",
@@ -124,7 +126,7 @@ export default function Index() {
     };
 
     useEffect(() => {
-        function handleClickOutside(event:any) {
+        function handleClickOutside(event: any) {
             if (
                 dropdownRef.current &&
                 !dropdownRef.current.contains(event.target)
@@ -276,7 +278,8 @@ export default function Index() {
                                                                         e.id
                                                                     );
                                                                     setActiveDropdownId(
-                                                                        false || null
+                                                                        false ||
+                                                                            null
                                                                     );
                                                                 }}
                                                                 className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
@@ -315,7 +318,8 @@ export default function Index() {
                                                                 rel="noopener noreferrer"
                                                                 onClick={() =>
                                                                     setActiveDropdownId(
-                                                                      false || null
+                                                                        false ||
+                                                                            null
                                                                     )
                                                                 }
                                                                 className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
@@ -334,7 +338,8 @@ export default function Index() {
                                                                 rel="noopener noreferrer"
                                                                 onClick={() =>
                                                                     setActiveDropdownId(
-                                                                       false || null
+                                                                        false ||
+                                                                            null
                                                                     )
                                                                 }
                                                                 className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
@@ -354,7 +359,8 @@ export default function Index() {
                                                                 rel="noopener noreferrer"
                                                                 onClick={() =>
                                                                     setActiveDropdownId(
-                                                                       false || null
+                                                                        false ||
+                                                                            null
                                                                     )
                                                                 }
                                                                 className="flex items-center px-4 py-2 hover:bg-gray-100 w-full text-left"
@@ -528,12 +534,16 @@ export default function Index() {
                                     type="number"
                                     className="w-full border rounded px-3 py-2"
                                     value={form.cedula}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
-                                            cedula: e.target.value,
-                                        })
-                                    }
+                                    onChange={(e) => {
+                                        if (e.target.value.length > 9) {
+                                            return;
+                                        } else {
+                                            setForm({
+                                                ...form,
+                                                cedula: e.target.value,
+                                            });
+                                        }
+                                    }}
                                     placeholder="32123466"
                                 />
                             </div>

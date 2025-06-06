@@ -80,6 +80,13 @@ export default function Authenticated({
                                     Personal
                                 </NavLink>
 
+                                 <NavLink
+                                    href={route('administrativo.index')}
+                                    active={route().current('administrativo.*')}
+                                >
+                                    Administrativo
+                                </NavLink>
+
 
                                  <NavLink
                                     href={route('asistencias.index')}

@@ -6,12 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Docente extends Model
+class Administrativo extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table = 'docentes';
-
+    protected $table = 'administrativo';
     protected $fillable = [
         'id',
         'nombre',
@@ -19,16 +18,7 @@ class Docente extends Model
         'correo',
         'cedula',
         'numero',
-        'especialidad',
-        'horario_id'
+        // 'especialidad',
+        'cargo'
     ];
-    public function secciones()
-    {
-        return $this->hasMany(Secciones::class);
-    }
-
-    public function horario()
-    {
-        return $this->belongsTo(Horario::class);
-    }
 }

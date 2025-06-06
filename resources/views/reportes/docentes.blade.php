@@ -45,6 +45,7 @@
                 <th>Cedula</th>
                 <th>Correo</th>
                 <th>Número</th>
+                <th>Especialidad</th>
                 <th>Fecha de Registro</th>
             </tr>
         </thead>
@@ -57,6 +58,7 @@
                      <td>{{ $docente->cedula }}</td>
                     <td>{{ $docente->correo }}</td>
                     <td>{{ $docente->numero ?? 'No definida' }}</td>
+                     <td>{{ $docente->especialidad }}</td>
                     <td>{{ $docente->created_at->format('d/m/Y') }}</td>
                 </tr>
             @endforeach

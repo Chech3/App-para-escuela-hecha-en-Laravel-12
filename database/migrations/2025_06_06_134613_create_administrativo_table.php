@@ -10,17 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('docentes', function (Blueprint $table) {
+        Schema::create('administrativo', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('apellido');
-            $table->string('cedula');
+            $table->string('nombre')->nullable();
+            $table->string('apellido')->nullable();
+            $table->string('cedula')->nullable();
             $table->string('numero')->nullable();
-             $table->string('especialidad')->nullable();
-            $table->string('correo')->unique();
+            $table->string('correo')->nullable();
+            $table->string('cargo')->nullable();
             $table->timestamps();
-
-            $table->foreignId('horario_id')->nullable()->constrained('horarios');
 
             $table->softDeletes();
         });
@@ -31,8 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('docentes', function (Blueprint $table) {
-            $table->dropSoftDeletes();
-        });
+        Schema::dropIfExists('administrativos');
     }
 };

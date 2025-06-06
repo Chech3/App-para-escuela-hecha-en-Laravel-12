@@ -101,27 +101,27 @@
         </div>
 
         <div class="content">
-            Quien suscribe, <span class="efecto">{{ $director }}
-            </span> Titular de la cédula de
-            identidad <span class="efecto">N° V-17.666.104 
-            </span>en mi condición de Director (E) de la Unidad Educativa
+            Quien suscribe,
+            <span class="efecto">{{ $director['nombre'] }} {{ $director['apellido'] }}</span> Titular de la cédula de
+            identidad <span class="efecto">N° {{ $director['cedula'] }}</span> en mi condición de Director (E) de la
+            Unidad Educativa
             Nacional SIMON RODRIGUEZ, ubicada en Pitahaya, Parroquia Buena Vista,
             Municipio Falcón, Estado Falcón, por medio de la presente HAGO CONSTAR que
             el (la) estudiante: <strong>{{ strtoupper($student->nombre) }}
                 {{ strtoupper($student->apellido) }}</strong>,
             Cédula Escolar <span class="efecto">{{ $student->cedula }}</span>, de <span
                 class="efecto">{{ $edad }} </span> años, está INSCRITO legalmente para cursar el
-                 <span class="efecto">
+            <span class="efecto">
                 {{ $student->grado->nombre }}
             </span>
-            @if ($student->grado->tipo === "Primaria")
-            <span>Grado</span>
+            @if ($student->grado->tipo === 'Primaria')
+                <span>Grado</span>
             @endif
 
-             @if ($student->grado->tipo === "Inicial")
-            <span>Nivel</span>
+            @if ($student->grado->tipo === 'Inicial')
+                <span>Nivel</span>
             @endif
-           
+
             de Educación
             <span class="efecto">
                 {{ $student->grado->tipo }},
@@ -140,9 +140,9 @@
 
         <div class="signature">
             <p>_________________________</p>
-            <p><strong>{{ $director }}</strong></p>
+             <p><strong>{{ $director['nombre_completo'] }}</strong></p>
             <p>Director(a)</p>
-            <p style="font-weight: bold; margin: 0;">N° Telf.: 0412-6669403</p>
+            <p style="font-weight: bold; margin: 0;">N° Telf.: {{ $director['telefono'] }}</p>
         </div>
 
         <div class="footer">
